@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "16309517426",
+    "firebase_url": "https://daliy-75039.firebaseio.com",
+    "project_id": "daliy-75039",
+    "storage_bucket": "daliy-75039.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16309517426:android:f83fd0ce3ed81c2a1bd6eb",
+        "android_client_info": {
+          "package_name": "com.example.daliy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOdtJDJCKrY0svWQ0-jxT7V7s4GHl0jsw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16309517426:android:5f86ddef61326e861bd6eb",
+        "android_client_info": {
+          "package_name": "com.example.garage_management"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOdtJDJCKrY0svWQ0-jxT7V7s4GHl0jsw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16309517426:android:d6bb822233a03be01bd6eb",
+        "android_client_info": {
+          "package_name": "com.example.tpandroid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOdtJDJCKrY0svWQ0-jxT7V7s4GHl0jsw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
