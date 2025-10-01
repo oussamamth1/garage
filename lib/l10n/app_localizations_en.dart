@@ -12,10 +12,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contryCode => 'en';
 
   @override
+  String get weSentCodeTo => 'We sent a code to';
+
+  @override
+  String get enterPhoneNumberToContinue =>
+      'Enter your phone number to continue';
+
+  @override
+  String get enterVerificationCode => 'Enter Verification Code';
+
+  @override
+  String get verifyOTP => 'Verify OTP';
+
+  @override
+  String get phoneAuthentication => 'Phone Authentication';
+
+  @override
   String get gender => 'Gender';
 
   @override
   String get messages => 'Messages';
+
+  @override
+  String get pleaseEnterPhoneNumber => 'Please enter your phone number';
+
+  @override
+  String get phoneMustStartWithCountryCode =>
+      'Phone must start with country code (e.g., +974)';
+
+  @override
+  String get pleaseEnterValidPhoneNumber => 'Please enter a valid phone number';
 
   @override
   String get reservations => 'Reservations';
@@ -25,6 +51,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get welcome => 'Welcome';
+
+  @override
+  String get fastMoto => 'Fast Moto';
+
+  @override
+  String get eagles => 'Eagles';
+
+  @override
+  String get equipEaglesForFastMoto => 'Team Eagles for Fast Moto';
 
   @override
   String get select_date => 'Select date';

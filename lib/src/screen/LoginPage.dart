@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:garage_management/l10n/app_localizations.dart';
+import 'package:garage_management/src/screen/AuthGate.dart';
 import 'package:garage_management/src/screen/RegisterPage.dart';
 
 final authProvider = Provider((ref) {
@@ -221,6 +223,43 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     onPressed: _login,
                                     child: const Text('Sign In'),
                                   ),
+                            const SizedBox(height: 24),
+                         _isLoading
+                                ? const SizedBox.shrink(
+                                
+                                  )
+                                :    ElevatedButton(
+                              onPressed: () {
+                                if (context.mounted) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const AuthGate(),
+                                    ),
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                                children: [Icon(Icons.phone),
+                                  Text(
+                                    AppLocalizations.of(context)!.phoneNumber,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+      
                             const SizedBox(height: 16),
                             TextButton(
                               onPressed: () {

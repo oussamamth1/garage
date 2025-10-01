@@ -12,10 +12,35 @@ class AppLocalizationsAr extends AppLocalizations {
   String get contryCode => 'sa';
 
   @override
+  String get weSentCodeTo => 'لقد أرسلنا رمزًا إلى';
+
+  @override
+  String get enterPhoneNumberToContinue => 'أدخل رقم هاتفك للمتابعة';
+
+  @override
+  String get enterVerificationCode => 'أدخل رمز التحقق';
+
+  @override
+  String get verifyOTP => 'تحقق من رمز OTP';
+
+  @override
+  String get phoneAuthentication => 'مصادقة الهاتف';
+
+  @override
   String get gender => 'Gender';
 
   @override
   String get messages => 'الرسائل';
+
+  @override
+  String get pleaseEnterPhoneNumber => 'يرجى إدخال رقم هاتفك';
+
+  @override
+  String get phoneMustStartWithCountryCode =>
+      'يجب أن يبدأ رقم الهاتف بمفتاح الدولة (مثال: +974)';
+
+  @override
+  String get pleaseEnterValidPhoneNumber => 'يرجى إدخال رقم هاتف صالح';
 
   @override
   String get reservations => 'حجوزات';
@@ -25,6 +50,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get welcome => 'مرحبا';
+
+  @override
+  String get fastMoto => 'دراجات سريعة';
+
+  @override
+  String get eagles => 'النسور';
+
+  @override
+  String get equipEaglesForFastMoto => 'فريق النسور للدراجات السريعة';
 
   @override
   String get select_date => 'اختر التاريخ';

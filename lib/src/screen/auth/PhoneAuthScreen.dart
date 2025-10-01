@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:garage_management/l10n/app_localizations.dart';
+import 'package:garage_management/src/screen/AuthGate.dart';
 import 'package:garage_management/src/screen/HomePage.dart';
+import 'package:garage_management/src/screen/LoginPage.dart';
 
 
 
@@ -176,7 +178,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(backgroundColor: Colors.black54,
         title: Text(otpSent ? "Verify OTP" : "Phone Authentication"),
         centerTitle: true,
         elevation: 0,
@@ -201,7 +203,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
 
               // Title
               Text(
-                otpSent ? "Enter Verification Code" : "Welcome",
+                otpSent ?  AppLocalizations.of(context)!.enterVerificationCode : AppLocalizations.of(context)!.welcome,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -213,8 +215,12 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
               // Subtitle
               Text(
                 otpSent
-                    ? "We sent a code to ${phoneController.text}"
-                    : "Enter your phone number to continue",
+                    ? "${AppLocalizations.of(context)!.weSentCodeTo} ${phoneController.text}"
+
+                    : AppLocalizations.of(
+                            context,
+                          )?.enterPhoneNumberToContinue ??
+                          "Enter your phone number to continue",
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
@@ -230,7 +236,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     labelText: AppLocalizations.of(context)?.phoneNumber??"",
-                    hintText: "+216 12 345 678",
+                    hintText: "+974 12 345 678",
                     prefixIcon: const Icon(Icons.phone),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -240,20 +246,22 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please enter your phone number";
+                      return AppLocalizations.of(context)?.pleaseEnterPhoneNumber??"Please enter your phone number";
                     }
                     if (!value.startsWith('+')) {
-                      return "Phone must start with country code (e.g., +216)";
+                      return AppLocalizations.of(
+                            context,
+                          )?.phoneMustStartWithCountryCode ??"Phone must start with country code (e.g., +216)";
                     }
                     if (value.length < 10) {
-                      return "Please enter a valid phone number";
+                      return AppLocalizations.of(context)?.pleaseEnterValidPhoneNumber??"Please enter a valid phone number";
                     }
                     return null;
                   },
                 ),
 
+          
                 const SizedBox(height: 24),
-
                 // Send OTP Button
                 ElevatedButton(
                   onPressed: isLoading ? null : sendOTP,
@@ -282,7 +290,35 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                           ),
                         ),
                 ),
-              ] else ...[
+                  const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {
+                    if (context.mounted) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.email),
+                      Text(
+                        AppLocalizations.of(context)!.sign_in,
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+          ] else ...[
                 TextFormField(
                   controller: otpController,
                   keyboardType: TextInputType.number,

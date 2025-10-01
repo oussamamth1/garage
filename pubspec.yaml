@@ -79,6 +79,8 @@ flutter:
     - assets/
     - assets/banner.jpg
     - assets/images.jpg
+    - assets/logo.png
+    - assets/logo1.png
     - assets/garage_logo.jpg
     
 

@@ -18,12 +18,12 @@ class LanguageSelectionPage extends ConsumerWidget {
     await ref.read(localeProvider.notifier).setLocale(Locale(languageCode));
 
     // Navigate to main app
-    // if (context.mounted) {
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => const AuthGate()),
-    //   );
-    // }
+    if (context.mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const AuthGate()),
+      );
+    }
   }
 
   @override
@@ -36,7 +36,7 @@ class LanguageSelectionPage extends ConsumerWidget {
           // Background image
           Positioned.fill(
             child: Image.asset(
-              'assets/images.jpg',
+              'assets/logo1.png',
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
@@ -58,33 +58,38 @@ class LanguageSelectionPage extends ConsumerWidget {
           // Content
           SafeArea(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 20),
 
                 // Welcome text
                 Expanded(
                   flex: 2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        localizations.welcome,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          localizations.welcome,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        localizations.letsGetStarted,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16,
+                        const SizedBox(height: 2),
+                        Text(
+                          localizations.letsGetStarted,
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            fontSize: 24,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
 
@@ -172,7 +177,7 @@ class LanguageSelectionPage extends ConsumerWidget {
 
                         // Logo
                         Image.asset(
-                          'assets/garage_logo.jpg',
+                          'assets/logo.png',
                           height: 60,
                           errorBuilder: (context, error, stackTrace) {
                             return const Icon(
@@ -184,7 +189,7 @@ class LanguageSelectionPage extends ConsumerWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          localizations.walks_regularly,
+                          localizations.equipEaglesForFastMoto,
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.black54,

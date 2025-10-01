@@ -104,6 +104,36 @@ abstract class AppLocalizations {
   /// **'en'**
   String get contryCode;
 
+  /// No description provided for @weSentCodeTo.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a code to'**
+  String get weSentCodeTo;
+
+  /// No description provided for @enterPhoneNumberToContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your phone number to continue'**
+  String get enterPhoneNumberToContinue;
+
+  /// No description provided for @enterVerificationCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Verification Code'**
+  String get enterVerificationCode;
+
+  /// No description provided for @verifyOTP.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify OTP'**
+  String get verifyOTP;
+
+  /// No description provided for @phoneAuthentication.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Authentication'**
+  String get phoneAuthentication;
+
   /// No description provided for @gender.
   ///
   /// In en, this message translates to:
@@ -115,6 +145,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Messages'**
   String get messages;
+
+  /// No description provided for @pleaseEnterPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your phone number'**
+  String get pleaseEnterPhoneNumber;
+
+  /// No description provided for @phoneMustStartWithCountryCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone must start with country code (e.g., +974)'**
+  String get phoneMustStartWithCountryCode;
+
+  /// No description provided for @pleaseEnterValidPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid phone number'**
+  String get pleaseEnterValidPhoneNumber;
 
   /// No description provided for @reservations.
   ///
@@ -133,6 +181,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Welcome'**
   String get welcome;
+
+  /// No description provided for @fastMoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast Moto'**
+  String get fastMoto;
+
+  /// No description provided for @eagles.
+  ///
+  /// In en, this message translates to:
+  /// **'Eagles'**
+  String get eagles;
+
+  /// No description provided for @equipEaglesForFastMoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Eagles for Fast Moto'**
+  String get equipEaglesForFastMoto;
 
   /// No description provided for @select_date.
   ///
