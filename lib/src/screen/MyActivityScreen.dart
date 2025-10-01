@@ -9,7 +9,7 @@ class MyActivityScreen extends StatelessWidget {
   void _showBookingDetails(
     BuildContext context,
     Map<String, dynamic> booking,
-    DateTime dateTime,
+    DateTime? dateTime,
   ) {
     showDialog(
       context: context,
@@ -19,7 +19,7 @@ class MyActivityScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Date: ${DateFormat('dd/MM/yyyy HH:mm').format(dateTime)}"),
+        dateTime!=null?    Text("Date: ${DateFormat('dd/MM/yyyy HH:mm').format(dateTime)}"):SizedBox.shrink(),
             Text("Status: ${booking["status"] ?? "pending"}"),
             Text("Description: ${booking["description"] ?? "No description"}"),
           ],
@@ -156,8 +156,8 @@ class MyActivityScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final doc = bookings[index];
                     final booking = doc.data() as Map<String, dynamic>;
-                    final dateTime = (booking["dateTime"] as Timestamp)
-                        .toDate();
+                final DateTime? dateTime = (booking["dateTime"] as Timestamp?)
+                        ?.toDate();
                     final status = booking["status"] ?? "pending";
 
                     return Card(
@@ -170,11 +170,14 @@ class MyActivityScreen extends StatelessWidget {
                             _showBookingDetails(context, booking, dateTime),
                         leading: const Icon(Icons.build_circle, size: 40),
                         title: Text(
-                          booking["serviceName"] ?? "Unknown Service",
+                            booking["serviceName"] ??
+                              "${booking["itemType"] ?? ''} ${booking["itemName"] ?? ''}",
                         ),
-                        subtitle: Text(
-                          "${DateFormat('dd/MM/yyyy HH:mm').format(dateTime)} | Status: $status",
-                        ),
+                  subtitle: dateTime != null
+    ? Text("${DateFormat('dd/MM/yyyy HH:mm').format(dateTime)} | Status: $status")
+    : Text("Status: $status ${booking["itemName"]}"),
+
+
                         trailing: PopupMenuButton<String>(
                           onSelected: (value) async {
                             final docId = doc.id;

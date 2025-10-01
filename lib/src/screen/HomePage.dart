@@ -4,9 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:garage_management/src/provider/authProvider.dart';
 import 'package:garage_management/src/screen/Accuile.dart';
+import 'package:garage_management/src/screen/Moto/MotoTypeScreen.dart';
 import 'package:garage_management/src/screen/MotoItemsScreen.dart';
 import 'package:garage_management/src/screen/MyActivityScreen.dart';
 import 'package:garage_management/src/screen/ProfilePage.dart';
+import 'package:garage_management/src/screen/costomer/CustomerHomeScreen.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -28,10 +30,10 @@ class _HomePageState extends ConsumerState<HomePage> {
       //_buildBookingsPage(context),
 Accuile(),
       const ProfilePage(),
-
-      _buildJobsPage(context),
+MotoTypeScreen(),
+    //  _buildJobsPage(context),
       MyActivityScreen(),
-MotoItemsScreen()
+CustomerHomeScreen()
     ];
 
     return Scaffold(

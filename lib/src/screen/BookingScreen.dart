@@ -1,136 +1,106 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_animate/flutter_animate.dart'; // For animations
+import 'package:garage_management/src/model/MotoModel.dart';
+import 'package:garage_management/src/provider/partProvider.dart';
 
-class BookingScreen extends StatefulWidget {
-  final String serviceId;
-  final String serviceName;
-  final String serviceDescription;
-  final double servicePrice;
-  final String serviceImage;
+// Provider that gives all model names
+// final allModelNamesProvider = StreamProvider<List<MotoModel>>((ref) {
+//   return FirebaseFirestore.instance
+//       .collection('models')
+//       .snapshots()
+//       .map(
+//         (snapshot) =>
+//             snapshot.docs.map((d) => d.data()).toList(),
+//       );
+// });
+
+class BookingScreen extends ConsumerStatefulWidget {
+  final String itemId;
+  final String itemName;
+  final String itemDescription;
+  final double itemPrice;
+  final String itemImage;
+  final String itemType; // "service" or "part"
 
   const BookingScreen({
     super.key,
-    required this.serviceId,
-    required this.serviceName,
-    required this.serviceDescription,
-    required this.servicePrice,
-    required this.serviceImage,
+    required this.itemId,
+    required this.itemName,
+    required this.itemDescription,
+    required this.itemPrice,
+    required this.itemImage,
+    required this.itemType,
   });
 
   @override
-  State<BookingScreen> createState() => _BookingScreenState();
+  ConsumerState<BookingScreen> createState() => _BookingScreenState();
 }
 
-class _BookingScreenState extends State<BookingScreen> {
+class _BookingScreenState extends ConsumerState<BookingScreen> {
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
   String? selectedMotoType;
-  final TextEditingController descriptionController = TextEditingController();
   bool isLoading = false;
 
-  final List<String> motoTypes = ["Yamaha", "Honda", "Suzuki", "KTM", "Ducati"];
-
-  // Date picker
   Future<void> _pickDate() async {
     final now = DateTime.now();
-    final pickedDate = await showDatePicker(
+    final picked = await showDatePicker(
       context: context,
+      initialDate: now,
       firstDate: now,
       lastDate: now.add(const Duration(days: 60)),
-      initialDate: now,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF1E88E5), // Blue accent
-              onPrimary: Colors.white,
-              surface: Colors.white,
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: const Color(0xFF1E88E5),
-              ),
-            ),
-          ),
-          child: child!,
-        );
-      },
     );
-
-    if (pickedDate != null) {
-      setState(() => selectedDate = pickedDate);
-    }
+    if (picked != null) setState(() => selectedDate = picked);
   }
 
-  // Time picker
   Future<void> _pickTime() async {
-    final pickedTime = await showTimePicker(
+    final picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF1E88E5),
-              onPrimary: Colors.white,
-              surface: Colors.white,
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: const Color(0xFF1E88E5),
-              ),
-            ),
-          ),
-          child: child!,
-        );
-      },
     );
-
-    if (pickedTime != null) {
-      setState(() => selectedTime = pickedTime);
-    }
+    if (picked != null) setState(() => selectedTime = picked);
   }
 
-  // Book service
-  Future<void> _bookService() async {
+  Future<void> _bookItem() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please log in to book.")));
+      return;
+    }
+
+    if (selectedMotoType == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text("Please log in to book a service"),
-          backgroundColor: Colors.redAccent,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
+        const SnackBar(content: Text("Please select a moto type.")),
       );
       return;
     }
 
-    if (selectedDate == null ||
-        selectedTime == null ||
-        selectedMotoType == null) {
+    if (widget.itemType == "service" &&
+        (selectedDate == null || selectedTime == null)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text("Please select date, time, and moto type"),
-          backgroundColor: Colors.redAccent,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
+        const SnackBar(content: Text("Please select date and time.")),
       );
       return;
     }
 
     setState(() => isLoading = true);
 
-    final bookingDateTime = DateTime(
-      selectedDate!.year,
-      selectedDate!.month,
-      selectedDate!.day,
-      selectedTime!.hour,
-      selectedTime!.minute,
-    );
+    DateTime? bookingDateTime;
+    if (widget.itemType == "service" &&
+        selectedDate != null &&
+        selectedTime != null) {
+      bookingDateTime = DateTime(
+        selectedDate!.year,
+        selectedDate!.month,
+        selectedDate!.day,
+        selectedTime!.hour,
+        selectedTime!.minute,
+      );
+    }
 
     final bookingRef = FirebaseFirestore.instance
         .collection("users")
@@ -139,238 +109,133 @@ class _BookingScreenState extends State<BookingScreen> {
         .doc();
 
     await bookingRef.set({
-      "serviceId": widget.serviceId,
-      "serviceName": widget.serviceName,
-      "dateTime": bookingDateTime,
+      "itemId": widget.itemId,
+      "itemName": widget.itemName,
+      "itemType": widget.itemType,
       "motoType": selectedMotoType,
-      "description": descriptionController.text,
-      "status": "pending",
-      "price": widget.servicePrice,
+      "dateTime": bookingDateTime,
+      "price": widget.itemPrice,
       "createdAt": FieldValue.serverTimestamp(),
     });
 
     setState(() => isLoading = false);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text("Booking confirmed!"),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      ),
-    );
-
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Booking confirmed!")));
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    final isService = widget.itemType == "service";
+    final modelsAsync = ref.watch(AllmodelsProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Book ${widget.serviceName}",
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
-      ),
+      appBar: AppBar(title: Text("Book ${widget.itemName}")),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Service image
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
+            // Item image
+            if (widget.itemImage.isNotEmpty)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  widget.serviceImage,
+                  widget.itemImage,
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
+                  errorBuilder: (_, __, ___) => Container(
                     height: 200,
                     color: Colors.grey[200],
-                    child: const Icon(Icons.error, color: Colors.red, size: 50),
+                    child: const Icon(Icons.error, size: 50),
                   ),
                 ),
               ),
-            ).animate().fadeIn(duration: 500.ms),
-
             const SizedBox(height: 16),
 
-            // Service details
             Text(
-              widget.serviceName,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ).animate().fadeIn(duration: 600.ms),
-            const SizedBox(height: 8),
-            Text(
-              widget.serviceDescription,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[600],
-                height: 1.5,
-              ),
-            ).animate().fadeIn(duration: 700.ms),
-            const SizedBox(height: 8),
-            Text(
-              "Price: ${widget.servicePrice.toStringAsFixed(2)} OMR",
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1E88E5),
-              ),
-            ).animate().fadeIn(duration: 800.ms),
-            const SizedBox(height: 24),
-
-            // Moto type dropdown
-            Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  labelText: "Select Moto Type",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[50],
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                ),
-                value: selectedMotoType,
-                items: motoTypes
-                    .map(
-                      (type) =>
-                          DropdownMenuItem(value: type, child: Text(type)),
-                    )
-                    .toList(),
-                onChanged: (val) => setState(() => selectedMotoType = val),
-              ),
-            ).animate().fadeIn(duration: 900.ms),
-            const SizedBox(height: 16),
-
-            // Description field
-            Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: TextField(
-                controller: descriptionController,
-                decoration: InputDecoration(
-                  labelText: "Description / Problem",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[50],
-                  contentPadding: const EdgeInsets.all(16),
-                ),
-                maxLines: 4,
-              ),
-            ).animate().fadeIn(duration: 1000.ms),
-            const SizedBox(height: 24),
-
-            // Date & Time pickers
-            Row(
-              children: [
-                Expanded(
-                  child: Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.calendar_today,
-                        color: Color(0xFF1E88E5),
-                      ),
-                      title: Text(
-                        selectedDate == null
-                            ? "Pick Date"
-                            : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
-                        style: TextStyle(
-                          color: selectedDate == null
-                              ? Colors.grey
-                              : Colors.black87,
-                        ),
-                      ),
-                      onTap: _pickDate,
-                    ),
-                  ).animate().fadeIn(duration: 1100.ms),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.access_time,
-                        color: Color(0xFF1E88E5),
-                      ),
-                      title: Text(
-                        selectedTime == null
-                            ? "Pick Time"
-                            : "${selectedTime!.hour}:${selectedTime!.minute.toString().padLeft(2, '0')}",
-                        style: TextStyle(
-                          color: selectedTime == null
-                              ? Colors.grey
-                              : Colors.black87,
-                        ),
-                      ),
-                      onTap: _pickTime,
-                    ),
-                  ).animate().fadeIn(duration: 1200.ms),
-                ),
-              ],
+              widget.itemName,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 32),
+            if (widget.itemDescription.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(widget.itemDescription),
+              ),
+            Text(
+              "Price: \$${widget.itemPrice.toStringAsFixed(2)}",
+              style: const TextStyle(fontSize: 18, color: Colors.blue),
+            ),
+            const SizedBox(height: 16),
 
-            // Confirm button
+            // Moto type dropdown from provider
+        
+     modelsAsync.when(
+              data: (models) {
+                // Reset selectedMotoType if its id is no longer in the list
+                if (selectedMotoType != null &&
+                    !models.any((m) => m.id == selectedMotoType)) {
+                  selectedMotoType = null;
+                }
+
+                return DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    labelText: "Select Moto Type",
+                  ),
+                  initialValue: selectedMotoType, // the model id
+                  items: models
+                      .map(
+                        (m) => DropdownMenuItem(
+                          value: m.id, // use id as value
+                          child: Text(m.name), // display name
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (val) => setState(() => selectedMotoType = val),
+                );
+              },
+              loading: () => const CircularProgressIndicator(),
+              error: (e, _) => Text("Error loading models"),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Date/time pickers only for services
+            if (isService)
+              Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.calendar_today),
+                    title: Text(
+                      selectedDate == null
+                          ? "Pick Date"
+                          : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
+                    ),
+                    onTap: _pickDate,
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.access_time),
+                    title: Text(
+                      selectedTime == null
+                          ? "Pick Time"
+                          : "${selectedTime!.hour}:${selectedTime!.minute.toString().padLeft(2, '0')}",
+                    ),
+                    onTap: _pickTime,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: isLoading ? null : _bookService,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: const Color(0xFF1E88E5),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 3,
-                ),
+                onPressed: isLoading ? null : _bookItem,
                 child: isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                        "Confirm Booking",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
+                    : const Text("Confirm Booking"),
               ),
-            ).animate().fadeIn(duration: 1300.ms),
+            ),
           ],
         ),
       ),

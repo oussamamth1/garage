@@ -3,10 +3,10 @@ import 'package:garage_management/src/model/supplierItem.dart';
 
 import 'package:garage_management/src/screen/BuyItemScreen.dart';
 
-class MotoItemCard extends StatelessWidget {
+class MotoCard extends StatelessWidget {
   final SupplierItem item;
 
-  const MotoItemCard({super.key, required this.item});
+  const MotoCard({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +72,7 @@ class MotoItemCard extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text("Buy"),
+                child: const Text("pick your suppliersItems"),
               ),
             ],
           ),
