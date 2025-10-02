@@ -90,7 +90,7 @@ class _AccuileState extends ConsumerState<Accuile> {
             expandedHeight: 280,
             floating: false,
             pinned: true,
-            backgroundColor: const Color.fromARGB(221, 185, 112, 2),
+            backgroundColor: const Color.fromARGB(221, 249, 181, 21),
             flexibleSpace: FlexibleSpaceBar(
               title: AnimatedOpacity(
                 opacity: _isCollapsed ? 1.0 : 0.0,
@@ -239,8 +239,9 @@ Text(
           SliverAppBar(
             expandedHeight: 320,
             floating: false,
-            pinned: true,
-            backgroundColor: const Color.fromARGB(221, 239, 141, 3),
+            pinned: false,
+//stretch: true,
+            backgroundColor: const Color.fromARGB(221, 14, 29, 68),
             flexibleSpace: FlexibleSpaceBar(
               title: AnimatedOpacity(
                 opacity: _isCollapsed ? 1.0 : 0.0,
@@ -311,36 +312,36 @@ Text(
           ),
      SliverToBoxAdapter(child:  Divider(height: 40),),
     SliverAppBar(
-            expandedHeight: 300,
+            expandedHeight: 200,
             floating: false,
-            pinned: true,
-            backgroundColor: const Color.fromARGB(165, 236, 236, 233),
+            pinned: false,
+          backgroundColor: const Color.fromARGB(163, 249, 253, 255),
             flexibleSpace: FlexibleSpaceBar(
-              title: AnimatedOpacity(
-                opacity: _isCollapsed ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 200),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Text(
-                      'Popular categorys',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      '${categoryAsync.value?.length ?? 0}',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // title: AnimatedOpacity(
+              //   opacity: _isCollapsed ? 1.0 : 0.0,
+              //   duration: const Duration(milliseconds: 200),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //     children: [
+              //       const Text(
+              //         'Popular categorys',
+              //         style: TextStyle(
+              //           fontSize: 18,
+              //           fontWeight: FontWeight.bold,
+              //           color: Color.fromARGB(255, 39, 4, 4),
+              //         ),
+              //       ),
+              //       Text(
+              //         '${categoryAsync.value?.length ?? 0}',
+              //         style: TextStyle(
+              //           fontSize: 18,
+              //           fontWeight: FontWeight.bold,
+              //           color: Colors.white,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               background:
                   // Services Section
                   categoryAsync.when(
@@ -355,51 +356,45 @@ Text(
                             "Popular categorys",
                             Icons.settings,
                           ),
+                      
+// Enhanced horizontal scrolling category list
                           SizedBox(
-                            height: 200,
+                            height: 220,
                             child: ListView.builder(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
+                                horizontal: 16,
                               ),
                               scrollDirection: Axis.horizontal,
+                              physics: const BouncingScrollPhysics(),
                               itemCount: categorys.length,
                               itemBuilder: (context, index) {
                                 final part = categorys[index];
-                                return InkWell(
-                                  onTap: () {
-                                    // Navigate to the booking screen for this part
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (_) => BookingScreen(
-                                    //       itemId: part.id,
-                                    //       itemName: part.name,
-                                    //       itemDescription:
-                                    //           "Stock: ${part.stock}, Original: ${part.isOriginal}",
-                                    //       itemPrice: part.price,
-                                    //       itemImage:
-                                    //           "", // if you have an image URL for the part
-                                    //       itemType:
-                                    //           "part", // indicate that this booking is for a part
-                                    //     ),
-                                    //   ),
-                                    // );
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => ModelsScreen(
-                                          brandId: part.id,
-                                          brandName: part.name,
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    right: index == categorys.length - 1
+                                        ? 0
+                                        : 12,
+                                  ),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => ModelsScreen(
+                                            brandId: part.id,
+                                            brandName: part.name,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  child: _buildCateegoryCard(part),
+                                      );
+                                    },
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: _buildCategoryCard(part, index),
+                                  ),
                                 );
                               },
                             ),
-                          ),
-                          const SizedBox(height: 24),
+                          )
+                        //  const SizedBox(height: 24),
                         ],
                       );
                     },
@@ -881,63 +876,63 @@ height: 60,width: 60,
     );
   }
 
-  Widget _buildCateegoryCard(part) {
-    return Container(
-      width: 160,
-padding: EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: part.logo != null && part.logo!.isNotEmpty
-                ? CachedNetworkImage(
-                    imageUrl: part.logo,
-                    height: 100,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: Colors.grey[200],
-                      child: const Center(child: CircularProgressIndicator()),
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      color: Colors.grey[200],
-                      child: const Icon(
-                        Icons.build,
-                        size: 40,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  )
-                : Container(
-                    height: 100,
-                    color: Colors.grey[200],
-                    child: const Center(
-                      child: Icon(Icons.build, size: 40, color: Colors.grey),
-                    ),
-                  ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  part.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+//   Widget _buildCateegoryCard(part) {
+//     return Container(
+//       width: 160,
+// padding: EdgeInsets.all(8),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.center,
+//         children: [
+//           ClipRRect(
+//             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+//             child: part.logo != null && part.logo!.isNotEmpty
+//                 ? CachedNetworkImage(
+//                     imageUrl: part.logo,
+//                     height: 100,
+//                     width: double.infinity,
+//                     fit: BoxFit.cover,
+//                     placeholder: (context, url) => Container(
+//                       color: Colors.grey[200],
+//                       child: const Center(child: CircularProgressIndicator()),
+//                     ),
+//                     errorWidget: (context, url, error) => Container(
+//                       color: Colors.grey[200],
+//                       child: const Icon(
+//                         Icons.build,
+//                         size: 40,
+//                         color: Colors.grey,
+//                       ),
+//                     ),
+//                   )
+//                 : Container(
+//                     height: 100,
+//                     color: Colors.grey[200],
+//                     child: const Center(
+//                       child: Icon(Icons.build, size: 40, color: Colors.grey),
+//                     ),
+//                   ),
+//           ),
+//           Padding(
+//             padding: const EdgeInsets.all(12),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   part.name,
+//                   style: const TextStyle(
+//                     fontWeight: FontWeight.bold,
+//                     fontSize: 14,
+//                   ),
+//                   maxLines: 1,
+//                   overflow: TextOverflow.ellipsis,
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
 
   Widget _buildPartCard(part) {
     return Container(
@@ -1063,5 +1058,228 @@ padding: EdgeInsets.all(8),
         ),
       ),
     );
+  }
+Widget _buildCategoryCard(part, int index) {
+    // Generate gradient colors based on index for variety
+    final gradientColors = _getGradientColors(index);
+
+    return Hero(
+      tag: 'category_${part.id}',
+      child: Container(
+        width: 170,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: gradientColors[0].withOpacity(0.15),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+              spreadRadius: 0,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Image section with gradient overlay
+              Expanded(
+                flex: 3,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // Background image
+                    part.logo != null && part.logo!.isNotEmpty
+                        ? CachedNetworkImage(
+                            imageUrl: part.logo,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    gradientColors[0].withOpacity(0.3),
+                                    gradientColors[1].withOpacity(0.3),
+                                  ],
+                                ),
+                              ),
+                              child: Center(
+                                child: SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      gradientColors[0],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: gradientColors,
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.directions_bike_rounded,
+                                size: 48,
+                                color: Colors.white.withOpacity(0.9),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: gradientColors,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.directions_bike_rounded,
+                              size: 48,
+                              color: Colors.white.withOpacity(0.9),
+                            ),
+                          ),
+
+                    // Gradient overlay for better text contrast
+                    Positioned.fill(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.4),
+                            ],
+                            stops: const [0.5, 1.0],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Shine effect overlay
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          gradient: RadialGradient(
+                            colors: [
+                              Colors.white.withOpacity(0.3),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Content section
+              Expanded(
+                flex: 2,
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                      top: BorderSide(
+                        color: gradientColors[0].withOpacity(0.1),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Category name
+                      Text(
+                        part.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          height: 1.2,
+                          letterSpacing: 0.2,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+
+                      // Action button
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Explore',
+                            style: TextStyle(
+                              color: gradientColors[0],
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(colors: gradientColors),
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: gradientColors[0].withOpacity(0.3),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.arrow_forward_rounded,
+                              size: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Helper method to generate gradient colors based on index
+  List<Color> _getGradientColors(int index) {
+    final gradients = [
+      [const Color(0xFF667eea), const Color(0xFF764ba2)], // Purple-Blue
+      [const Color(0xFFf093fb), const Color(0xFff5576c)], // Pink-Red
+      [const Color(0xFF4facfe), const Color(0xFF00f2fe)], // Light Blue
+      [const Color(0xFF43e97b), const Color(0xFF38f9d7)], // Green-Cyan
+      [const Color(0xFFfa709a), const Color(0xFFfee140)], // Pink-Yellow
+      [const Color(0xFF30cfd0), const Color(0xFF330867)], // Cyan-Purple
+      [const Color(0xFFa8edea), const Color(0xFFfed6e3)], // Mint-Pink
+      [const Color(0xFFff9a9e), const Color(0xFFfecfef)], // Coral-Pink
+    ];
+
+    return gradients[index % gradients.length];
   }
 }

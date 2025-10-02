@@ -18,8 +18,30 @@ class HomePage extends ConsumerStatefulWidget {
   ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage> {
+class _HomePageState extends ConsumerState<HomePage>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,126 +50,241 @@ class _HomePageState extends ConsumerState<HomePage> {
     final profile = ref.watch(userProfileProvider(uid));
 
     final List<Widget> _pages = [
-      //_buildBookingsPage(context),
-Accuile(),
+      Accuile(),
       const ProfilePage(),
-MotoTypeScreen(),
-    //  _buildJobsPage(context),
+      MotoTypeScreen(),
       MyActivityScreen(),
-CustomerHomeScreen()
+      CustomerHomeScreen(),
     ];
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: const Color(0xFFF8F9FA),
+      extendBodyBehindAppBar: _selectedIndex == 0,
       appBar: _selectedIndex != 3
-          ? AppBar(
-              elevation: 0,
-              backgroundColor: Theme.of(context).primaryColor,
-              title: Text(
-                _getPageTitle(_selectedIndex),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                ),
-              ),
-              actions: [
-                // Notification icon with badge
-                Stack(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.notifications_outlined),
-                      onPressed: () {
- Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const SettingsScreen()),
-      );
-                        // Handle notifications
-                      },
-                    ),
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 16,
-                          minHeight: 16,
-                        ),
-                        child: const Text(
-                          '3',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
+          ? PreferredSize(
+              preferredSize: const Size.fromHeight(70),
+              child: AppBar(
+                elevation: 0,
+                backgroundColor: _selectedIndex == 0
+                    ? Colors.transparent
+                    : Theme.of(context).primaryColor,
+                flexibleSpace: _selectedIndex != 0
+                    ? Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Theme.of(context).primaryColor,
+                              Theme.of(context).primaryColor.withOpacity(0.8),
+                            ],
                           ),
-                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : null,
+                title: Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _getPageTitle(_selectedIndex),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                          letterSpacing: 0.5,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                // Profile avatar in app bar
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: profile.when(
-                    data: (userData) => GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedIndex = 3;
-                        });
-                      },
-                      child: CircleAvatar(
-                        radius: 18,
-                        backgroundImage: userData?.photoUrl.isNotEmpty == true
-                            ? NetworkImage(userData!.photoUrl)
-                            : null,
-                        backgroundColor: Colors.white.withOpacity(0.3),
-                        child: userData?.photoUrl.isEmpty == true
-                            ? const Icon(Icons.person, size: 20)
-                            : null,
+                      Text(
+                        _getPageSubtitle(_selectedIndex),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white.withOpacity(0.9),
+                        ),
                       ),
-                    ),
-                    loading: () => const CircleAvatar(
-                      radius: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                    error: (_, __) => const CircleAvatar(
-                      radius: 18,
-                      child: Icon(Icons.person, size: 20),
-                    ),
+                    ],
                   ),
                 ),
-              ],
+                actions: [
+                  // Notification icon with modern badge
+                  Container(
+                    margin: const EdgeInsets.only(right: 8),
+                    child: Stack(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.notifications_outlined,
+                              size: 24,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SettingsScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Positioned(
+                          right: 8,
+                          top: 8,
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFFFF6B6B), Color(0xFFEE5A6F)],
+                              ),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.red.withOpacity(0.4),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 18,
+                              minHeight: 18,
+                            ),
+                            child: const Text(
+                              '3',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Enhanced profile avatar
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: profile.when(
+                      data: (userData) => GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = 3;
+                            _animationController.reset();
+                            _animationController.forward();
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.5),
+                              width: 2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage:
+                                userData?.photoUrl.isNotEmpty == true
+                                ? NetworkImage(userData!.photoUrl)
+                                : null,
+                            backgroundColor: Colors.white.withOpacity(0.3),
+                            child: userData?.photoUrl.isEmpty == true
+                                ? const Icon(Icons.person, size: 22)
+                                : null,
+                          ),
+                        ),
+                      ),
+                      loading: () => Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.2),
+                        ),
+                        child: const CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.transparent,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      error: (_, __) => const CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.white24,
+                        child: Icon(Icons.person, size: 22),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             )
           : null,
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: ConvexAppBar.badge(
-        {0: '2', 1: Icons.new_releases},
-        badgeMargin: const EdgeInsets.only(bottom: 30, right: 40),
-        badgeColor: const Color.fromARGB(255, 5, 1, 6),
-        badgeTextColor: Colors.white,
-        style: TabStyle.textIn,
-
-        backgroundColor: Theme.of(context).primaryColor,
-        activeColor:  const Color.fromARGB(255, 220, 217, 220),
-        color: Colors.white.withOpacity(0.6),
-        items: const [
-          TabItem(icon: Icons.home, title: 'Home'),
-          TabItem(icon: Icons.person_outlined, title: 'Profile'),
-          TabItem(icon: Icons.build_circle, title: 'Jobs'),
-          TabItem(icon: Icons.inventory_2, title: 'Inventory'),
-          TabItem(icon: Icons.motorcycle, title: 'MotoItem'),
-        ],
-        initialActiveIndex: 0,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: _pages[_selectedIndex],
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 20,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
+        child: ConvexAppBar.badge(
+          {0: '2', 1: Icons.fiber_manual_record},
+          badgeMargin: const EdgeInsets.only(bottom: 30, right: 35),
+          badgePadding: const EdgeInsets.all(4),
+          badgeColor: const Color(0xFFFF6B6B),
+          badgeTextColor: Colors.white,
+          style: TabStyle.custom,
+          backgroundColor: Colors.white,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColor.withOpacity(0.8),
+            ],
+          ),
+          activeColor: const Color.fromARGB(255, 16, 10, 10),
+          color: const Color.fromARGB(255, 12, 7, 156),
+          height: 60,
+          curveSize: 80,
+          top: -25,
+          items: const [
+            TabItem(icon: Icons.home_rounded, title: 'Home'),
+            TabItem(icon: Icons.person_outline_rounded, title: 'Profile'),
+            TabItem(icon: Icons.build_circle_outlined, title: 'Jobs'),
+            TabItem(icon: Icons.inventory_2_outlined, title: 'Activity'),
+            TabItem(icon: Icons.two_wheeler_rounded, title: 'Vehicles'),
+          ],
+          initialActiveIndex: 0,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+              _animationController.reset();
+              _animationController.forward();
+            });
+          },
+        ),
       ),
     );
   }
@@ -155,266 +292,34 @@ CustomerHomeScreen()
   String _getPageTitle(int index) {
     switch (index) {
       case 0:
-        return 'My Bookings';
+        return 'Dashboard';
       case 1:
-        return 'Jobs';
+        return 'My Profile';
       case 2:
-        return 'Inventory';
+        return 'Service Jobs';
+      case 3:
+        return 'My Activity';
+      case 4:
+        return 'Vehicle Management';
       default:
         return 'Garage Management';
     }
   }
 
-  Widget _buildBookingsPage(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildStatsCard(context),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Recent Bookings',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey[900],
-                      ),
-                    ),
-                    TextButton(onPressed: () {}, child: const Text('View All')),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => _buildBookingCard(context, index),
-              childCount: 5,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatsCard(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withOpacity(0.8),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).primaryColor.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildStatItem('Active', '8', Icons.pending_actions),
-          Container(width: 1, height: 40, color: Colors.white.withOpacity(0.3)),
-          _buildStatItem('Completed', '24', Icons.check_circle),
-          Container(width: 1, height: 40, color: Colors.white.withOpacity(0.3)),
-          _buildStatItem('Pending', '3', Icons.schedule),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatItem(String label, String value, IconData icon) {
-    return Column(
-      children: [
-        Icon(icon, color: Colors.white, size: 28),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 12),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBookingCard(BuildContext context, int index) {
-    final isUrgent = index == 0;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: isUrgent ? Border.all(color: Colors.orange, width: 2) : null,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.directions_car, color: Colors.blue),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Toyota Camry 2020',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.grey[900],
-                          ),
-                        ),
-                        if (isUrgent) ...[
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.orange,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Text(
-                              'URGENT',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                    Text(
-                      'Oil Change & Inspection',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Text(
-                  'In Progress',
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
-              const SizedBox(width: 4),
-              Text(
-                'Today, 2:30 PM',
-                style: TextStyle(color: Colors.grey[600], fontSize: 13),
-              ),
-              const Spacer(),
-              Icon(Icons.attach_money, size: 16, color: Colors.grey[600]),
-              Text(
-                '\$150',
-                style: TextStyle(
-                  color: Colors.grey[900],
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildJobsPage(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.build_circle, size: 80, color: Colors.grey[300]),
-          const SizedBox(height: 16),
-          Text(
-            '🛠️ Jobs Management',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 8),
-          Text('Coming Soon', style: TextStyle(color: Colors.grey[600])),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInventoryPage(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.inventory_2, size: 80, color: Colors.grey[300]),
-          const SizedBox(height: 16),
-          Text(
-            '📦 Inventory System',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 8),
-          Text('Coming Soon', style: TextStyle(color: Colors.grey[600])),
-        ],
-      ),
-    );
+  String _getPageSubtitle(int index) {
+    switch (index) {
+      case 0:
+        return 'Welcome back!';
+      case 1:
+        return 'Manage your account';
+      case 2:
+        return 'Active service requests';
+      case 3:
+        return 'Track your operations';
+      case 4:
+        return 'Manage motorcycles & parts';
+      default:
+        return 'Your workspace';
+    }
   }
 }
