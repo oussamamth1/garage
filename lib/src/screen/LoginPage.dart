@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:garage_management/l10n/app_localizations.dart';
 import 'package:garage_management/src/screen/AuthGate.dart';
 import 'package:garage_management/src/screen/RegisterPage.dart';
+import 'package:garage_management/src/screen/auth/PhoneAuthScreen.dart';
 
 final authProvider = Provider((ref) {
   return FirebaseAuth.instance;
@@ -83,45 +84,35 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: ThemeData(
-        primaryColor: Colors.blueAccent,
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.blue,
-          accentColor: Colors.blueAccent,
-          backgroundColor: Colors.grey[100],
-        ),
-        textTheme: const TextTheme(
-          headlineMedium: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-          bodyMedium: TextStyle(fontSize: 16, color: Colors.black54),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            textStyle: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Background image
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/background.jpg"),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-        ),
-      ),
-      child: Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.blueAccent.shade100, Colors.white],
+    
+          // Gradient overlay for readability
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  const Color.fromARGB(255, 65, 51, 11).withOpacity(0.4),
+                  Colors.black.withOpacity(0.1),
+                ],
+              ),
             ),
           ),
-          child: SafeArea(
+    
+          // Main content
+          SafeArea(
             child: Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -129,6 +120,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   constraints: const BoxConstraints(maxWidth: 400),
                   child: Card(
                     elevation: 8,
+                   // slightly transparent
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -140,18 +132,25 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+    
                             Text(
                               'Welcome Back',
-                              style: Theme.of(context).textTheme.headlineMedium,
+                              // style: Theme.of(context)
+                              //     .textTheme
+                              //     .headlineMedium
+                              //     ?.copyWith(color: Colors.black87),
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 8),
                             Text(
                               'Sign in to continue',
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(color: Colors.black54),
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 32),
+    
+                            // Email field
                             TextFormField(
                               controller: _emailController,
                               decoration: InputDecoration(
@@ -160,13 +159,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(
-                                    color: Colors.blueAccent,
-                                    width: 2,
-                                  ),
-                                ),
+                                // focusedBorder: OutlineInputBorder(
+                                //   borderRadius: BorderRadius.circular(12),
+                                //   borderSide: const BorderSide(
+                                //     color: Colors.blueAccent,
+                                //     width: 2,
+                                //   ),
+                                // ),
                               ),
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
@@ -184,6 +183,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               autofillHints: const [AutofillHints.email],
                             ),
                             const SizedBox(height: 16),
+    
+                            // Password field
                             TextFormField(
                               controller: _passwordController,
                               decoration: InputDecoration(
@@ -215,58 +216,95 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               autofillHints: const [AutofillHints.password],
                             ),
                             const SizedBox(height: 24),
+    
+                            // Sign in button
                             _isLoading
                                 ? const Center(
                                     child: CircularProgressIndicator(),
                                   )
                                 : ElevatedButton(
                                     onPressed: _login,
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          12,
+                                        ),
+                                      ),
+                                    ),
                                     child: const Text('Sign In'),
                                   ),
                             const SizedBox(height: 24),
-                         _isLoading
-                                ? const SizedBox.shrink(
-                                
-                                  )
-                                :    ElevatedButton(
-                              onPressed: () {
-                                if (context.mounted) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const AuthGate(),
+    
+                            // Phone auth button
+                            _isLoading
+                                ? const SizedBox.shrink()
+                                : ElevatedButton(
+                                    onPressed: () {
+                                      if (context.mounted) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const PhoneAuthScreen(), // replace with AuthGate()
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          12,
+                                        ),
+                                      ),
                                     ),
-                                  );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                                children: [Icon(Icons.phone),
-                                  Text(
-                                    AppLocalizations.of(context)!.phoneNumber,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(Icons.phone),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.phoneNumber,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-      
                             const SizedBox(height: 16),
+                       
+    
+                            // Logo
+                            Image.asset(
+                              'assets/logo2.png',
+                              height: 40,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.directions_car,
+                                  size: 40,
+                                  color: Colors.black54,
+                                );
+                              },
+                            ),
+                         const SizedBox(height: 10),
+                            // Register button
                             TextButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => const RegisterPage(),
+                                    builder: (_) =>
+                                        const RegisterPage(), // replace with RegisterPage()
                                   ),
                                 );
                               },
@@ -284,7 +322,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

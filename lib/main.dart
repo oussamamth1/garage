@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:garage_management/l10n/l10n.dart';
+import 'package:garage_management/src/provider/ThemeModeNotifier.dart';
 import 'package:garage_management/src/provider/locale_provider.dart';
 import 'package:garage_management/src/screen/AuthGate.dart';
 import 'package:garage_management/src/screen/HomePage.dart';
@@ -10,6 +11,7 @@ import 'package:garage_management/src/screen/LoginPage.dart';
 import 'package:garage_management/src/screen/auth/LanguageSelectionPage.dart';
 import 'package:garage_management/src/screen/auth/PhoneAuthScreen.dart';
 import 'package:garage_management/src/settings/Settings.dart';
+import 'package:garage_management/src/theme/app_theme.dart';
 import 'firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
@@ -53,6 +55,7 @@ class MyApp extends ConsumerWidget  {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
     final currentLocale = ref.watch(localeProvider);
     return MaterialApp(
       title: 'Garage Management',
@@ -67,18 +70,9 @@ class MyApp extends ConsumerWidget  {
 //       supportedLocales: L10n.all,
 //       locale: const Locale('ar'),
 // localizationsDelegates: AppLocalizations.localizationsDelegates,
-      themeMode:
-          ThemeMode.system, // 👈 Light/Dark mode switch (system, light, dark)
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.blue,
-        primaryColor: const Color.fromARGB(255, 243, 170, 33),
-        scaffoldBackgroundColor: Colors.grey[100],
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-        ),
-      ),
+     theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: themeMode,
       routes: {
         '/home': (context) => HomePage(),
         '/login': (context) => LoginPage(),
@@ -86,16 +80,7 @@ class MyApp extends ConsumerWidget  {
         '/settings': (context) => const SettingsScreen(),
         '/auth': (context) => const AuthGate(),
       },
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.black,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.black,
-          foregroundColor: Colors.white,
-        ),
-      ),
-      home: const LanguageSelectionPage(),
+     home: const LanguageSelectionPage(),
     );
   }
 }

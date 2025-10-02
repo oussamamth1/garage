@@ -36,7 +36,7 @@ class LanguageSelectionPage extends ConsumerWidget {
           // Background image
           Positioned.fill(
             child: Image.asset(
-              'assets/logo1.png',
+              'assets/logo4.png',
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
@@ -95,7 +95,7 @@ class LanguageSelectionPage extends ConsumerWidget {
 
                 // Language selection card
                 Expanded(
-                  flex: 2,
+                  flex: 1,
                   child: Container(
                     decoration: const BoxDecoration(
                       color: Colors.white,
@@ -110,12 +110,12 @@ class LanguageSelectionPage extends ConsumerWidget {
                         Text(
                           localizations.pick_your_language,
                           style: const TextStyle(
-                            fontSize: 20,
+                            fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.black87,
                           ),
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 8),
 
                         // English button
                         Padding(
@@ -143,7 +143,7 @@ class LanguageSelectionPage extends ConsumerWidget {
                           ),
                         ),
 
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 8),
 
                         // Arabic button
                         Padding(
@@ -165,7 +165,7 @@ class LanguageSelectionPage extends ConsumerWidget {
                             child: Text(
                               localizations.langAR,
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 1,
                               ),
@@ -173,16 +173,16 @@ class LanguageSelectionPage extends ConsumerWidget {
                           ),
                         ),
 
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 10),
 
                         // Logo
                         Image.asset(
-                          'assets/logo.png',
-                          height: 60,
+                          'assets/logo2.png',
+                          height: 40,
                           errorBuilder: (context, error, stackTrace) {
                             return const Icon(
                               Icons.directions_car,
-                              size: 60,
+                              size: 40,
                               color: Colors.black54,
                             );
                           },

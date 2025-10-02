@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:garage_management/src/provider/ThemeModeNotifier.dart';
 import 'package:garage_management/src/provider/locale_provider.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:settings_ui/settings_ui.dart';
-
-// Import your locale provider file
-// import 'package:your_app/providers/locale_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -17,7 +13,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _notificationsEnabled = true;
-  bool _darkModeEnabled = false;
   bool _autoPlayVideos = false;
   bool _biometricEnabled = true;
   bool _marketingEmails = false;
@@ -27,11 +22,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final currentLocale = ref.watch(localeProvider);
     final isRTL = ref.watch(isRTLProvider);
     final languageName = ref.watch(currentLanguageNameProvider);
+    final themeMode = ref.watch(themeModeProvider);
+    final themeModeNotifier = ref.read(themeModeProvider.notifier);
 
     return Directionality(
       textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
-        backgroundColor: _darkModeEnabled
+        backgroundColor: themeMode == ThemeMode.dark
             ? const Color(0xFF1C1C1E)
             : Colors.grey[100],
         appBar: AppBar(
@@ -41,10 +38,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           centerTitle: true,
           elevation: 0,
-          backgroundColor: _darkModeEnabled
+          backgroundColor: themeMode == ThemeMode.dark
               ? const Color(0xFF2C2C2E)
               : Colors.white,
-          foregroundColor: _darkModeEnabled ? Colors.white : Colors.black87,
+          foregroundColor: themeMode == ThemeMode.dark
+              ? Colors.white
+              : Colors.black87,
         ),
         body: SettingsList(
           darkTheme: const SettingsThemeData(
@@ -172,27 +171,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   },
                 ),
                 SettingsTile.switchTile(
-                  initialValue: _darkModeEnabled,
-                  leading: const Icon(
-                    Icons.dark_mode_outlined,
-                    color: Colors.purple,
-                  ),
-                  title: Text(
-                    _getLocalizedText('dark_mode', currentLocale.languageCode),
-                  ),
-                  description: Text(
-                    _getLocalizedText(
-                      'enable_dark_theme',
-                      currentLocale.languageCode,
-                    ),
-                  ),
-                  onToggle: (value) {
-                    setState(() {
-                      _darkModeEnabled = value;
-                    });
-                  },
-                ),
-                SettingsTile.switchTile(
                   initialValue: _autoPlayVideos,
                   leading: const Icon(
                     Icons.play_circle_outline,
@@ -233,6 +211,120 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   onPressed: (context) {
                     _showLanguageDialog(context);
+                  },
+                ),
+              ],
+            ),
+
+            // Theme Section
+            SettingsSection(
+              title: Text(
+                _getLocalizedText('theme', currentLocale.languageCode),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              tiles: [
+                SettingsTile.switchTile(
+                  initialValue: themeMode == ThemeMode.dark,
+                  leading: Icon(
+                    themeMode == ThemeMode.dark
+                        ? Icons.dark_mode
+                        : Icons.light_mode,
+                    color: Colors.deepPurple,
+                  ),
+                  title: Text(
+                    _getLocalizedText('dark_mode', currentLocale.languageCode),
+                  ),
+                  description: Text(
+                    _getLocalizedText(
+                      'dark_mode_description',
+                      currentLocale.languageCode,
+                    ),
+                  ),
+                  onToggle: (value) async {
+                    if (value) {
+                      await themeModeNotifier.useDarkTheme();
+                      _showSnackBar(
+                        _getLocalizedText(
+                          'dark_mode_enabled',
+                          currentLocale.languageCode,
+                        ),
+                      );
+                    } else {
+                      await themeModeNotifier.useLightTheme();
+                      _showSnackBar(
+                        _getLocalizedText(
+                          'light_mode_enabled',
+                          currentLocale.languageCode,
+                        ),
+                      );
+                    }
+                  },
+                ),
+                SettingsTile.switchTile(
+                  initialValue: themeMode == ThemeMode.system,
+                  leading: const Icon(
+                    Icons.brightness_auto,
+                    color: Colors.orange,
+                  ),
+                  title: Text(
+                    _getLocalizedText(
+                      'system_theme',
+                      currentLocale.languageCode,
+                    ),
+                  ),
+                  description: Text(
+                    _getLocalizedText(
+                      'system_theme_description',
+                      currentLocale.languageCode,
+                    ),
+                  ),
+                  onToggle: (value) async {
+                    if (value) {
+                      await themeModeNotifier.useSystemTheme();
+                      _showSnackBar(
+                        _getLocalizedText(
+                          'system_theme_enabled',
+                          currentLocale.languageCode,
+                        ),
+                      );
+                    } else {
+                      await themeModeNotifier.useLightTheme();
+                      _showSnackBar(
+                        _getLocalizedText(
+                          'light_mode_enabled',
+                          currentLocale.languageCode,
+                        ),
+                      );
+                    }
+                  },
+                ),
+                SettingsTile.navigation(
+                  leading: const Icon(
+                    Icons.palette_outlined,
+                    color: Colors.pink,
+                  ),
+                  title: Text(
+                    _getLocalizedText(
+                      'theme_preview',
+                      currentLocale.languageCode,
+                    ),
+                  ),
+                  description: Text(
+                    _getCurrentThemeText(themeMode, currentLocale.languageCode),
+                  ),
+                  trailing: Icon(
+                    isRTL ? Icons.chevron_left : Icons.chevron_right,
+                  ),
+                  onPressed: (context) {
+                    _showThemeDialog(
+                      context,
+                      ref,
+                      currentLocale.languageCode,
+                      _showSnackBar,
+                    );
                   },
                 ),
               ],
@@ -545,11 +637,99 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  void _selectLanguage(String languageCode) async {
-    // Update locale using your existing provider
-    await ref.read(localeProvider.notifier).setLocale(Locale(languageCode));
+  String _getCurrentThemeText(ThemeMode mode, String languageCode) {
+    switch (mode) {
+      case ThemeMode.light:
+        return _getLocalizedText('current_light', languageCode);
+      case ThemeMode.dark:
+        return _getLocalizedText('current_dark', languageCode);
+      case ThemeMode.system:
+        return _getLocalizedText('current_system', languageCode);
+    }
+  }
 
-    // Show confirmation
+  void _showThemeDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String languageCode,
+    Function(String) showSnackBar,
+  ) {
+    final themeMode = ref.read(themeModeProvider);
+    final themeModeNotifier = ref.read(themeModeProvider.notifier);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(_getLocalizedText('select_theme', languageCode)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioListTile<ThemeMode>(
+              title: Text(_getLocalizedText('light_mode', languageCode)),
+              subtitle: Text(
+                _getLocalizedText('light_mode_desc', languageCode),
+              ),
+              value: ThemeMode.light,
+              groupValue: themeMode,
+              onChanged: (value) async {
+                if (value != null) {
+                  await themeModeNotifier.setThemeMode(value);
+                  Navigator.pop(context);
+                  showSnackBar(
+                    _getLocalizedText('light_mode_enabled', languageCode),
+                  );
+                }
+              },
+              secondary: const Icon(Icons.light_mode),
+            ),
+            RadioListTile<ThemeMode>(
+              title: Text(_getLocalizedText('dark_mode', languageCode)),
+              subtitle: Text(_getLocalizedText('dark_mode_desc', languageCode)),
+              value: ThemeMode.dark,
+              groupValue: themeMode,
+              onChanged: (value) async {
+                if (value != null) {
+                  await themeModeNotifier.setThemeMode(value);
+                  Navigator.pop(context);
+                  showSnackBar(
+                    _getLocalizedText('dark_mode_enabled', languageCode),
+                  );
+                }
+              },
+              secondary: const Icon(Icons.dark_mode),
+            ),
+            RadioListTile<ThemeMode>(
+              title: Text(_getLocalizedText('system_theme', languageCode)),
+              subtitle: Text(
+                _getLocalizedText('system_theme_desc', languageCode),
+              ),
+              value: ThemeMode.system,
+              groupValue: themeMode,
+              onChanged: (value) async {
+                if (value != null) {
+                  await themeModeNotifier.setThemeMode(value);
+                  Navigator.pop(context);
+                  showSnackBar(
+                    _getLocalizedText('system_theme_enabled', languageCode),
+                  );
+                }
+              },
+              secondary: const Icon(Icons.brightness_auto),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(_getLocalizedText('cancel', languageCode)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _selectLanguage(String languageCode) async {
+    await ref.read(localeProvider.notifier).setLocale(Locale(languageCode));
     if (mounted) {
       _showSnackBar(_getLocalizedText('language_changed', languageCode));
     }
@@ -651,6 +831,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         'view_edit_profile': 'View and edit your profile',
         'email': 'Email',
         'phone': 'Phone Number',
+        'theme': 'Theme',
         'preferences': 'Preferences',
         'notifications': 'Push Notifications',
         'receive_notifications': 'Receive push notifications',
@@ -703,6 +884,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         'settings': 'الإعدادات',
         'account': 'الحساب',
         'profile': 'الملف الشخصي',
+        'theme': 'Theme',
         'view_edit_profile': 'عرض وتعديل ملفك الشخصي',
         'email': 'البريد الإلكتروني',
         'phone': 'رقم الهاتف',
