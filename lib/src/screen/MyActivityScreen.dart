@@ -121,7 +121,7 @@ class MyActivityScreen extends StatelessWidget {
         .snapshots();
 
     return Scaffold(
-      appBar: AppBar(title: const Text("My Activity")),
+     // appBar: AppBar(title: const Text("My Activity")),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

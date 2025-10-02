@@ -8,6 +8,7 @@ import 'package:garage_management/src/provider/brandProvider.dart';
 import 'package:garage_management/src/provider/partProvider.dart';
 import 'package:garage_management/src/screen/BookingScreen.dart';
 import 'package:garage_management/src/screen/ModelsScreen.dart';
+import 'package:garage_management/src/theme/app_theme.dart';
 
 final servicesProvider = StreamProvider<List<Service>>((ref) {
   return FirebaseFirestore.instance
@@ -87,31 +88,33 @@ class _AccuileState extends ConsumerState<Accuile> {
         slivers: [
           // Professional Hero Header with SliverAppBar
           SliverAppBar(
-            expandedHeight: 280,
+            expandedHeight: 180,
             floating: false,
-            pinned: true,
-            backgroundColor: const Color.fromARGB(221, 249, 181, 21),
+            pinned: false,
+            backgroundColor: AppColors.primaryGold,
             flexibleSpace: FlexibleSpaceBar(
               title: AnimatedOpacity(
                 opacity: _isCollapsed ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 200),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                     Text(
+                    Text(
                       'ALN Motorbike',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                      ),),
-Text(
-                              "30 Years",
-                                    style: TextStyle(
-                                      color: const Color.fromARGB(221, 255, 255, 255),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),),
-                    
+                      ),
+                    ),
+                    Text(
+                      "30 Years",
+                      style: TextStyle(
+                        color: const Color.fromARGB(221, 255, 255, 255),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -119,15 +122,12 @@ Text(
                 fit: StackFit.expand,
                 children: [
                   CachedNetworkImage(
-                    imageUrl:
-                        "https://images.unsplash.com/photo-1558981806-ec527fa84c39",
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: Colors.grey[300],
-                      child: const Center(child: CircularProgressIndicator()),
-                    ),
+                    imageUrl: "", // no url, will fallback
+                    fit: BoxFit.fill,
+                    placeholder: (context, url) =>
+                        Image.asset("assets/ALn.png", fit: BoxFit.fill),
                     errorWidget: (context, url, error) =>
-                        Image.asset("assets/banner.jpg", fit: BoxFit.cover),
+                        Image.asset("assets/ALn.png", fit: BoxFit.fill),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -205,7 +205,7 @@ Text(
               ),
             ),
           ),
-   
+
           // Stats Section
           SliverToBoxAdapter(
             child: Container(
@@ -213,7 +213,10 @@ Text(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.blue.shade600, Colors.blue.shade800],
+                  colors: [
+                    const Color.fromARGB(255, 245, 212, 3),
+                    const Color.fromARGB(255, 164, 116, 3),
+                  ],
                 ),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
@@ -237,34 +240,34 @@ Text(
             ),
           ),
           SliverAppBar(
-            expandedHeight: 320,
+            expandedHeight: 250,
             floating: false,
             pinned: false,
-//stretch: true,
-            backgroundColor: const Color.fromARGB(221, 14, 29, 68),
+            //stretch: true,
+            //  backgroundColor: const Color.fromARGB(255, 59, 186, 232),
             flexibleSpace: FlexibleSpaceBar(
               title: AnimatedOpacity(
                 opacity: _isCollapsed ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 200),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     const Text(
                       'Popular Service',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        // color: Colors.white,
                       ),
                     ),
-                     Text(
-                     '${ servicesAsync.value?.length ?? 0}',
+                    Text(
+                      '${servicesAsync.value?.length ?? 0}',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
-                  
                   ],
                 ),
               ),
@@ -279,21 +282,23 @@ Text(
                       return Column(
                         children: [
                           _buildSectionHeader("Popular Services", Icons.build),
-                          SizedBox(
-                            height: 220,
-                            child: ListView.builder(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
+                          Expanded(
+                            child: SizedBox(
+                              height: 260,
+                              child: ListView.builder(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                ),
+                                scrollDirection: Axis.horizontal,
+                                itemCount: services.length,
+                                itemBuilder: (context, index) {
+                                  final service = services[index];
+                                  return _buildServiceCard(context, service);
+                                },
                               ),
-                              scrollDirection: Axis.horizontal,
-                              itemCount: services.length,
-                              itemBuilder: (context, index) {
-                                final service = services[index];
-                                return _buildServiceCard(context, service);
-                              },
                             ),
                           ),
-                          const SizedBox(height: 24),
+                         // const SizedBox(height: 24),
                         ],
                       );
                     },
@@ -310,12 +315,12 @@ Text(
                   ),
             ),
           ),
-     SliverToBoxAdapter(child:  Divider(height: 40),),
-    SliverAppBar(
-            expandedHeight: 200,
+          SliverToBoxAdapter(child: Divider(height: 40)),
+          SliverAppBar(
+            expandedHeight: 220,
             floating: false,
             pinned: false,
-          backgroundColor: const Color.fromARGB(163, 249, 253, 255),
+            backgroundColor: const Color.fromARGB(163, 249, 253, 255),
             flexibleSpace: FlexibleSpaceBar(
               // title: AnimatedOpacity(
               //   opacity: _isCollapsed ? 1.0 : 0.0,
@@ -352,49 +357,53 @@ Text(
 
                       return Column(
                         children: [
-                          _buildSectionHeader(
-                            "Popular categorys",
-                            Icons.settings,
-                          ),
-                      
-// Enhanced horizontal scrolling category list
-                          SizedBox(
-                            height: 220,
-                            child: ListView.builder(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                              ),
-                              scrollDirection: Axis.horizontal,
-                              physics: const BouncingScrollPhysics(),
-                              itemCount: categorys.length,
-                              itemBuilder: (context, index) {
-                                final part = categorys[index];
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                    right: index == categorys.length - 1
-                                        ? 0
-                                        : 12,
-                                  ),
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => ModelsScreen(
-                                            brandId: part.id,
-                                            brandName: part.name,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: _buildCategoryCard(part, index),
-                                  ),
-                                );
-                              },
+                          Expanded(flex: 1,
+                            child: _buildSectionHeader(
+                              "Popular categorys",
+                              Icons.settings,
                             ),
-                          )
-                        //  const SizedBox(height: 24),
+                          ),
+
+                          // Enhanced horizontal scrolling category list
+                          Expanded(flex: 3,
+                            child: SizedBox(
+                            //  height: 300,
+                              child: ListView.builder(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                ),
+                                scrollDirection: Axis.horizontal,
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: categorys.length,
+                                itemBuilder: (context, index) {
+                                  final part = categorys[index];
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      right: index == categorys.length - 1
+                                          ? 0
+                                          : 10,
+                                    ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => ModelsScreen(
+                                              brandId: part.id,
+                                              brandName: part.name,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: _buildCategoryCard(part, index),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                          //  const SizedBox(height: 24),
                         ],
                       );
                     },
@@ -412,7 +421,6 @@ Text(
             ),
           ),
 
-      
           // Models & Parts Section
           modelsAsync.when(
             data: (models) {
@@ -466,10 +474,10 @@ Text(
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(16),
-                                          child: 
-CachedNetworkImage(
+                                          child: CachedNetworkImage(
                                             imageUrl: model.logo ?? "",
-height: 60,width: 60,
+                                            height: 60,
+                                            width: 60,
                                             fit: BoxFit.contain,
                                             placeholder: (context, url) =>
                                                 const Center(
@@ -586,7 +594,7 @@ height: 60,width: 60,
                   children: [
                     _buildSectionHeader("Popular Services", Icons.build),
                     SizedBox(
-                      height: 220,
+                      height: 260,
                       child: ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         scrollDirection: Axis.horizontal,
@@ -617,9 +625,9 @@ height: 60,width: 60,
               ),
             ),
           ),
-    
+
           // Parts Section
-      // Parts Section
+          // Parts Section
           partsAsync.when(
             data: (parts) {
               if (parts.isEmpty) {
@@ -785,7 +793,8 @@ height: 60,width: 60,
 
   Widget _buildServiceCard(BuildContext context, Service service) {
     return Container(
-      width: 180,
+      width: 150,
+      height: 150,
       margin: const EdgeInsets.only(right: 16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -818,56 +827,60 @@ height: 60,width: 60,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-              child: CachedNetworkImage(
-                imageUrl: service.imageUrl,
-                height: 120,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  color: Colors.grey[200],
-                  child: const Center(child: CircularProgressIndicator()),
+            Expanded(flex: 2,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
                 ),
-                errorWidget: (context, url, error) => Container(
-                  color: Colors.grey[200],
-                  child: const Icon(Icons.broken_image, size: 50),
+                child: CachedNetworkImage(
+                  imageUrl: service.imageUrl,
+                  height: 200,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey[200],
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.broken_image, size: 50),
+                  ),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    service.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+            Expanded(flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 3,left: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      service.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    service.description,
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "\$${service.price.toStringAsFixed(2)}",
-                    style: TextStyle(
-                      color: Colors.blue.shade700,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                    const SizedBox(height: 4),
+                    Text(
+                      service.description,
+                      style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 8),
+                    Text(
+                      "\$${service.price.toStringAsFixed(2)}",
+                      style: TextStyle(
+                        color: Colors.blue.shade700,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -876,63 +889,63 @@ height: 60,width: 60,
     );
   }
 
-//   Widget _buildCateegoryCard(part) {
-//     return Container(
-//       width: 160,
-// padding: EdgeInsets.all(8),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         children: [
-//           ClipRRect(
-//             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-//             child: part.logo != null && part.logo!.isNotEmpty
-//                 ? CachedNetworkImage(
-//                     imageUrl: part.logo,
-//                     height: 100,
-//                     width: double.infinity,
-//                     fit: BoxFit.cover,
-//                     placeholder: (context, url) => Container(
-//                       color: Colors.grey[200],
-//                       child: const Center(child: CircularProgressIndicator()),
-//                     ),
-//                     errorWidget: (context, url, error) => Container(
-//                       color: Colors.grey[200],
-//                       child: const Icon(
-//                         Icons.build,
-//                         size: 40,
-//                         color: Colors.grey,
-//                       ),
-//                     ),
-//                   )
-//                 : Container(
-//                     height: 100,
-//                     color: Colors.grey[200],
-//                     child: const Center(
-//                       child: Icon(Icons.build, size: 40, color: Colors.grey),
-//                     ),
-//                   ),
-//           ),
-//           Padding(
-//             padding: const EdgeInsets.all(12),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(
-//                   part.name,
-//                   style: const TextStyle(
-//                     fontWeight: FontWeight.bold,
-//                     fontSize: 14,
-//                   ),
-//                   maxLines: 1,
-//                   overflow: TextOverflow.ellipsis,
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
+  //   Widget _buildCateegoryCard(part) {
+  //     return Container(
+  //       width: 160,
+  // padding: EdgeInsets.all(8),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.center,
+  //         children: [
+  //           ClipRRect(
+  //             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+  //             child: part.logo != null && part.logo!.isNotEmpty
+  //                 ? CachedNetworkImage(
+  //                     imageUrl: part.logo,
+  //                     height: 100,
+  //                     width: double.infinity,
+  //                     fit: BoxFit.cover,
+  //                     placeholder: (context, url) => Container(
+  //                       color: Colors.grey[200],
+  //                       child: const Center(child: CircularProgressIndicator()),
+  //                     ),
+  //                     errorWidget: (context, url, error) => Container(
+  //                       color: Colors.grey[200],
+  //                       child: const Icon(
+  //                         Icons.build,
+  //                         size: 40,
+  //                         color: Colors.grey,
+  //                       ),
+  //                     ),
+  //                   )
+  //                 : Container(
+  //                     height: 100,
+  //                     color: Colors.grey[200],
+  //                     child: const Center(
+  //                       child: Icon(Icons.build, size: 40, color: Colors.grey),
+  //                     ),
+  //                   ),
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.all(12),
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(
+  //                   part.name,
+  //                   style: const TextStyle(
+  //                     fontWeight: FontWeight.bold,
+  //                     fontSize: 14,
+  //                   ),
+  //                   maxLines: 1,
+  //                   overflow: TextOverflow.ellipsis,
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //   }
 
   Widget _buildPartCard(part) {
     return Container(
@@ -1059,7 +1072,8 @@ height: 60,width: 60,
       ),
     );
   }
-Widget _buildCategoryCard(part, int index) {
+
+  Widget _buildCategoryCard(part, int index) {
     // Generate gradient colors based on index for variety
     final gradientColors = _getGradientColors(index);
 
@@ -1113,8 +1127,8 @@ Widget _buildCategoryCard(part, int index) {
                               ),
                               child: Center(
                                 child: SizedBox(
-                                  width: 24,
-                                  height: 24,
+                                  width: 20,
+                                  height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
@@ -1134,7 +1148,7 @@ Widget _buildCategoryCard(part, int index) {
                               ),
                               child: Icon(
                                 Icons.directions_bike_rounded,
-                                size: 48,
+                                size: 20,
                                 color: Colors.white.withOpacity(0.9),
                               ),
                             ),
@@ -1194,9 +1208,9 @@ Widget _buildCategoryCard(part, int index) {
 
               // Content section
               Expanded(
-                flex: 2,
+                flex: 1,
                 child: Container(
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.only(left:3,right: 3),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border(
@@ -1207,8 +1221,9 @@ Widget _buildCategoryCard(part, int index) {
                     ),
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   // crossAxisAlignment: CrossAxisAlignment.start,
+
+                    
                     children: [
                       // Category name
                       Text(
@@ -1225,18 +1240,18 @@ Widget _buildCategoryCard(part, int index) {
 
                       // Action button
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
                             'Explore',
                             style: TextStyle(
                               color: gradientColors[0],
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.all(4),
+                          //  padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(colors: gradientColors),
                               borderRadius: BorderRadius.circular(8),
@@ -1250,7 +1265,7 @@ Widget _buildCategoryCard(part, int index) {
                             ),
                             child: const Icon(
                               Icons.arrow_forward_rounded,
-                              size: 16,
+                              size: 20,
                               color: Colors.white,
                             ),
                           ),

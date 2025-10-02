@@ -452,10 +452,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get obese => 'Obese';
 
   @override
-  String get settings => 'Settings';
+  String get settings => 'الإعدادات';
 
   @override
-  String get account => 'Account';
+  String get account => 'الحساب';
 
   @override
   String get notification => 'إشعار';
@@ -522,7 +522,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get save => 'Save';
 
   @override
-  String get language => 'العربية';
+  String get language => 'اللغة';
 
   @override
   String get units => 'Units';
@@ -1159,8 +1159,177 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enjoy_your_dinner => 'استمتع بعشائك';
 
   @override
+  String get jobs => 'الوظائف';
+
+  @override
+  String get vehicles => 'المركبات';
+
+  @override
   String get connexion => 'الاتصال';
 
   @override
   String get cancel => 'إلغاء';
+
+  @override
+  String get theme => 'السمة';
+
+  @override
+  String get theme_preview => 'معاينة السمة';
+
+  @override
+  String get view_edit_profile => 'عرض وتعديل ملفك الشخصي';
+
+  @override
+  String get phone => 'رقم الهاتف';
+
+  @override
+  String get preferences => 'التفضيلات';
+
+  @override
+  String get notifications => 'الإشعارات الفورية';
+
+  @override
+  String get receive_notifications => 'تلقي الإشعارات الفورية';
+
+  @override
+  String get dark_mode => 'الوضع الداكن';
+
+  @override
+  String get dark_mode_description => 'تفعيل الوضع الداكن لتقليل سطوع الشاشة';
+
+  @override
+  String get dark_mode_enabled => 'تم تفعيل الوضع الداكن';
+
+  @override
+  String get light_mode_enabled => 'تم تفعيل الوضع الفاتح';
+
+  @override
+  String get system_theme => 'سمة النظام';
+
+  @override
+  String get system_theme_description => 'استخدام السمة الافتراضية للجهاز';
+
+  @override
+  String get system_theme_enabled => 'تم تفعيل سمة النظام';
+
+  @override
+  String get enable_dark_theme => 'تفعيل السمة الداكنة';
+
+  @override
+  String get autoplay_videos => 'تشغيل الفيديو تلقائياً';
+
+  @override
+  String get videos_play_auto => 'تشغيل الفيديوهات تلقائياً';
+
+  @override
+  String get autoplay => 'التشغيل التلقائي';
+
+  @override
+  String get security => 'الأمان والخصوصية';
+
+  @override
+  String get change_password => 'تغيير كلمة المرور';
+
+  @override
+  String get biometric => 'المصادقة البيومترية';
+
+  @override
+  String get use_fingerprint => 'استخدام بصمة الإصبع أو الوجه';
+
+  @override
+  String get privacy_policy => 'سياسة الخصوصية';
+
+  @override
+  String get terms => 'شروط الخدمة';
+
+  @override
+  String get communication => 'التواصل';
+
+  @override
+  String get marketing_emails => 'رسائل التسويق';
+
+  @override
+  String get receive_promotional => 'تلقي رسائل ترويجية';
+
+  @override
+  String get feedback => 'إرسال ملاحظات';
+
+  @override
+  String get about => 'حول';
+
+  @override
+  String get app_version => 'إصدار التطبيق';
+
+  @override
+  String get version => 'الإصدار';
+
+  @override
+  String get help => 'المساعدة والدعم';
+
+  @override
+  String get rate_app => 'قيم هذا التطبيق';
+
+  @override
+  String get danger_zone => 'منطقة الخطر';
+
+  @override
+  String get logout => 'تسجيل الخروج';
+
+  @override
+  String get delete_account => 'حذف الحساب';
+
+  @override
+  String get enabled => 'مفعّل';
+
+  @override
+  String get disabled => 'معطّل';
+
+  @override
+  String get profile_tapped => 'تم النقر على الملف الشخصي';
+
+  @override
+  String get email_tapped => 'تم النقر على البريد الإلكتروني';
+
+  @override
+  String get phone_tapped => 'تم النقر على رقم الهاتف';
+
+  @override
+  String get change_password_tapped => 'تم النقر على تغيير كلمة المرور';
+
+  @override
+  String get privacy_tapped => 'تم النقر على سياسة الخصوصية';
+
+  @override
+  String get terms_tapped => 'تم النقر على شروط الخدمة';
+
+  @override
+  String get feedback_tapped => 'تم النقر على إرسال ملاحظات';
+
+  @override
+  String get help_tapped => 'تم النقر على المساعدة والدعم';
+
+  @override
+  String get rate_tapped => 'تم النقر على تقييم التطبيق';
+
+  @override
+  String get select_language => 'اختر اللغة';
+
+  @override
+  String get language_changed => 'تم تغيير اللغة بنجاح';
+
+  @override
+  String get logout_confirm => 'هل أنت متأكد من تسجيل الخروج؟';
+
+  @override
+  String get delete_confirm =>
+      'هل أنت متأكد من حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String get logged_out => 'تم تسجيل الخروج بنجاح';
+
+  @override
+  String get delete_requested => 'تم طلب حذف الحساب';
 }

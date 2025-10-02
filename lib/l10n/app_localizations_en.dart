@@ -523,7 +523,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get save => 'Save';
 
   @override
-  String get language => 'Anglais';
+  String get language => 'Language';
 
   @override
   String get units => 'Units';
@@ -1162,8 +1162,178 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enjoy_your_dinner => 'Enjoy your dinner';
 
   @override
+  String get jobs => 'Jobs';
+
+  @override
+  String get vehicles => 'Vehicles';
+
+  @override
   String get connexion => 'Connexion';
 
   @override
   String get cancel => 'Cancel';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get theme_preview => 'Theme Preview';
+
+  @override
+  String get view_edit_profile => 'View and edit your profile';
+
+  @override
+  String get phone => 'Phone Number';
+
+  @override
+  String get preferences => 'Preferences';
+
+  @override
+  String get notifications => 'Push Notifications';
+
+  @override
+  String get receive_notifications => 'Receive push notifications';
+
+  @override
+  String get dark_mode => 'Dark Mode';
+
+  @override
+  String get dark_mode_description =>
+      'Enable dark mode to reduce screen brightness';
+
+  @override
+  String get dark_mode_enabled => 'Dark mode enabled';
+
+  @override
+  String get light_mode_enabled => 'Light mode enabled';
+
+  @override
+  String get system_theme => 'System Theme';
+
+  @override
+  String get system_theme_description => 'Use the device’s default theme';
+
+  @override
+  String get system_theme_enabled => 'System theme enabled';
+
+  @override
+  String get enable_dark_theme => 'Enable dark theme';
+
+  @override
+  String get autoplay_videos => 'Auto-play Videos';
+
+  @override
+  String get videos_play_auto => 'Videos play automatically';
+
+  @override
+  String get autoplay => 'Auto-play';
+
+  @override
+  String get security => 'Security & Privacy';
+
+  @override
+  String get change_password => 'Change Password';
+
+  @override
+  String get biometric => 'Biometric Authentication';
+
+  @override
+  String get use_fingerprint => 'Use fingerprint or face ID';
+
+  @override
+  String get privacy_policy => 'Privacy Policy';
+
+  @override
+  String get terms => 'Terms of Service';
+
+  @override
+  String get communication => 'Communication';
+
+  @override
+  String get marketing_emails => 'Marketing Emails';
+
+  @override
+  String get receive_promotional => 'Receive promotional emails';
+
+  @override
+  String get feedback => 'Send Feedback';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get app_version => 'App Version';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get help => 'Help & Support';
+
+  @override
+  String get rate_app => 'Rate This App';
+
+  @override
+  String get danger_zone => 'Danger Zone';
+
+  @override
+  String get logout => 'Log Out';
+
+  @override
+  String get delete_account => 'Delete Account';
+
+  @override
+  String get enabled => 'enabled';
+
+  @override
+  String get disabled => 'disabled';
+
+  @override
+  String get profile_tapped => 'Profile tapped';
+
+  @override
+  String get email_tapped => 'Email tapped';
+
+  @override
+  String get phone_tapped => 'Phone Number tapped';
+
+  @override
+  String get change_password_tapped => 'Change Password tapped';
+
+  @override
+  String get privacy_tapped => 'Privacy Policy tapped';
+
+  @override
+  String get terms_tapped => 'Terms of Service tapped';
+
+  @override
+  String get feedback_tapped => 'Send Feedback tapped';
+
+  @override
+  String get help_tapped => 'Help & Support tapped';
+
+  @override
+  String get rate_tapped => 'Rate App tapped';
+
+  @override
+  String get select_language => 'Select Language';
+
+  @override
+  String get language_changed => 'Language changed successfully';
+
+  @override
+  String get logout_confirm => 'Are you sure you want to log out?';
+
+  @override
+  String get delete_confirm =>
+      'Are you sure you want to delete your account? This action cannot be undone.';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get logged_out => 'Logged out successfully';
+
+  @override
+  String get delete_requested => 'Account deletion requested';
 }

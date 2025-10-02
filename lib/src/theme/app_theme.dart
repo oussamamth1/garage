@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   // Primary Colors
   static const Color primaryGold = Color(0xFFD4A574);
+  static const Color primaryGold1 = Color.fromARGB(255, 163, 113, 59);
   static const Color primaryBlack = Color(0xFF000000);
   static const Color primaryWhite = Color(0xFFFFFFFF);
 
@@ -122,10 +123,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(186, 139, 195, 255),
-            width: 3,
-          ),
+          borderSide: const BorderSide(color: Color.fromARGB(186, 139, 195, 255), width: 3),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -200,7 +198,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       brightness: Brightness.light,
-      primaryColor: AppColors.primaryGold,
+      primaryColor: AppColors.primaryGold1,
       scaffoldBackgroundColor: AppColors.backgroundLight,
 
       colorScheme: const ColorScheme.light(
@@ -264,23 +262,14 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.inputFillLight,
-        hintStyle: const TextStyle(
-          color: AppColors.inputHintLight,
-          fontSize: 16,
-        ),
+        hintStyle: const TextStyle(color: AppColors.inputHintLight, fontSize: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: AppColors.inputBorderLight,
-            width: 1,
-          ),
+          borderSide: const BorderSide(color: AppColors.inputBorderLight, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: AppColors.inputBorderLight,
-            width: 1,
-          ),
+          borderSide: const BorderSide(color: AppColors.inputBorderLight, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

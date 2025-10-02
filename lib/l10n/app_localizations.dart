@@ -1115,7 +1115,7 @@ abstract class AppLocalizations {
   /// No description provided for @language.
   ///
   /// In en, this message translates to:
-  /// **'Anglais'**
+  /// **'Language'**
   String get language;
 
   /// No description provided for @units.
@@ -2286,6 +2286,18 @@ abstract class AppLocalizations {
   /// **'Enjoy your dinner'**
   String get enjoy_your_dinner;
 
+  /// No description provided for @jobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Jobs'**
+  String get jobs;
+
+  /// No description provided for @vehicles.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicles'**
+  String get vehicles;
+
   /// No description provided for @connexion.
   ///
   /// In en, this message translates to:
@@ -2297,6 +2309,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancel;
+
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @theme_preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Preview'**
+  String get theme_preview;
+
+  /// No description provided for @view_edit_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'View and edit your profile'**
+  String get view_edit_profile;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phone;
+
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get notifications;
+
+  /// No description provided for @receive_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive push notifications'**
+  String get receive_notifications;
+
+  /// No description provided for @dark_mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get dark_mode;
+
+  /// No description provided for @dark_mode_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable dark mode to reduce screen brightness'**
+  String get dark_mode_description;
+
+  /// No description provided for @dark_mode_enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark mode enabled'**
+  String get dark_mode_enabled;
+
+  /// No description provided for @light_mode_enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Light mode enabled'**
+  String get light_mode_enabled;
+
+  /// No description provided for @system_theme.
+  ///
+  /// In en, this message translates to:
+  /// **'System Theme'**
+  String get system_theme;
+
+  /// No description provided for @system_theme_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the device’s default theme'**
+  String get system_theme_description;
+
+  /// No description provided for @system_theme_enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'System theme enabled'**
+  String get system_theme_enabled;
+
+  /// No description provided for @enable_dark_theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable dark theme'**
+  String get enable_dark_theme;
+
+  /// No description provided for @autoplay_videos.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-play Videos'**
+  String get autoplay_videos;
+
+  /// No description provided for @videos_play_auto.
+  ///
+  /// In en, this message translates to:
+  /// **'Videos play automatically'**
+  String get videos_play_auto;
+
+  /// No description provided for @autoplay.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-play'**
+  String get autoplay;
+
+  /// No description provided for @security.
+  ///
+  /// In en, this message translates to:
+  /// **'Security & Privacy'**
+  String get security;
+
+  /// No description provided for @change_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get change_password;
+
+  /// No description provided for @biometric.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric Authentication'**
+  String get biometric;
+
+  /// No description provided for @use_fingerprint.
+  ///
+  /// In en, this message translates to:
+  /// **'Use fingerprint or face ID'**
+  String get use_fingerprint;
+
+  /// No description provided for @privacy_policy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacy_policy;
+
+  /// No description provided for @terms.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get terms;
+
+  /// No description provided for @communication.
+  ///
+  /// In en, this message translates to:
+  /// **'Communication'**
+  String get communication;
+
+  /// No description provided for @marketing_emails.
+  ///
+  /// In en, this message translates to:
+  /// **'Marketing Emails'**
+  String get marketing_emails;
+
+  /// No description provided for @receive_promotional.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive promotional emails'**
+  String get receive_promotional;
+
+  /// No description provided for @feedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Feedback'**
+  String get feedback;
+
+  /// No description provided for @about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// No description provided for @app_version.
+  ///
+  /// In en, this message translates to:
+  /// **'App Version'**
+  String get app_version;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// No description provided for @help.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get help;
+
+  /// No description provided for @rate_app.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate This App'**
+  String get rate_app;
+
+  /// No description provided for @danger_zone.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger Zone'**
+  String get danger_zone;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Out'**
+  String get logout;
+
+  /// No description provided for @delete_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get delete_account;
+
+  /// No description provided for @enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'enabled'**
+  String get enabled;
+
+  /// No description provided for @disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'disabled'**
+  String get disabled;
+
+  /// No description provided for @profile_tapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile tapped'**
+  String get profile_tapped;
+
+  /// No description provided for @email_tapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Email tapped'**
+  String get email_tapped;
+
+  /// No description provided for @phone_tapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number tapped'**
+  String get phone_tapped;
+
+  /// No description provided for @change_password_tapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password tapped'**
+  String get change_password_tapped;
+
+  /// No description provided for @privacy_tapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy tapped'**
+  String get privacy_tapped;
+
+  /// No description provided for @terms_tapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service tapped'**
+  String get terms_tapped;
+
+  /// No description provided for @feedback_tapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Feedback tapped'**
+  String get feedback_tapped;
+
+  /// No description provided for @help_tapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support tapped'**
+  String get help_tapped;
+
+  /// No description provided for @rate_tapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate App tapped'**
+  String get rate_tapped;
+
+  /// No description provided for @select_language.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get select_language;
+
+  /// No description provided for @language_changed.
+  ///
+  /// In en, this message translates to:
+  /// **'Language changed successfully'**
+  String get language_changed;
+
+  /// No description provided for @logout_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out?'**
+  String get logout_confirm;
+
+  /// No description provided for @delete_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your account? This action cannot be undone.'**
+  String get delete_confirm;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @logged_out.
+  ///
+  /// In en, this message translates to:
+  /// **'Logged out successfully'**
+  String get logged_out;
+
+  /// No description provided for @delete_requested.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion requested'**
+  String get delete_requested;
 }
 
 class _AppLocalizationsDelegate

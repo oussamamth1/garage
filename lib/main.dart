@@ -57,7 +57,7 @@ class MyApp extends ConsumerWidget  {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
     final currentLocale = ref.watch(localeProvider);
-    return MaterialApp(
+    return MaterialApp(debugShowCheckedModeBanner :false,
       title: 'Garage Management',
       locale: currentLocale,
       supportedLocales: L10n.all,

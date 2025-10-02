@@ -238,11 +238,11 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                     labelText: AppLocalizations.of(context)?.phoneNumber??"",
                     hintText: "+974 12 345 678",
                     prefixIcon: const Icon(Icons.phone),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    // border: OutlineInputBorder(
+                    //   borderRadius: BorderRadius.circular(12),
+                    // ),
                     filled: true,
-                    fillColor: Colors.grey[100],
+                  //  fillColor: Colors.grey[100],
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -336,7 +336,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     filled: true,
-                    fillColor: Colors.grey[100],
+                //    fillColor: Colors.grey[100],
                     counterText: "",
                   ),
                 ),

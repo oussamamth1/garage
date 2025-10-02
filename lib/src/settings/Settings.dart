@@ -3,6 +3,7 @@ import 'package:garage_management/src/provider/ThemeModeNotifier.dart';
 import 'package:garage_management/src/provider/locale_provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:garage_management/l10n/app_localizations.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -33,7 +34,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             : Colors.grey[100],
         appBar: AppBar(
           title: Text(
-            _getLocalizedText('settings', currentLocale.languageCode),
+            AppLocalizations.of(context)?.settings ??
+                _getLocalizedText('settings', currentLocale.languageCode),
             style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
           ),
           centerTitle: true,
@@ -58,7 +60,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             // Account Section
             SettingsSection(
               title: Text(
-                _getLocalizedText('account', currentLocale.languageCode),
+                AppLocalizations.of(context)?.account ??
+                    _getLocalizedText('account', currentLocale.languageCode),
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -68,23 +71,29 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 SettingsTile.navigation(
                   leading: const Icon(Icons.person_outline, color: Colors.blue),
                   title: Text(
-                    _getLocalizedText('profile', currentLocale.languageCode),
+                    AppLocalizations.of(context)?.profile ??
+                        _getLocalizedText(
+                          'profile',
+                          currentLocale.languageCode,
+                        ),
                   ),
                   description: Text(
-                    _getLocalizedText(
-                      'view_edit_profile',
-                      currentLocale.languageCode,
-                    ),
+                    AppLocalizations.of(context)!.view_edit_profile,
+                    // _getLocalizedText(
+                    //   'view_edit_profile',
+                    //   currentLocale.languageCode,
+                    // ),
                   ),
                   trailing: Icon(
                     isRTL ? Icons.chevron_left : Icons.chevron_right,
                   ),
                   onPressed: (context) {
                     _showSnackBar(
-                      _getLocalizedText(
-                        'profile_tapped',
-                        currentLocale.languageCode,
-                      ),
+                      AppLocalizations.of(context)!.profile_tapped,
+                      // _getLocalizedText(
+                      //   'profile_tapped',
+                      //   currentLocale.languageCode,
+                      // ),
                     );
                   },
                 ),
@@ -94,19 +103,24 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: Colors.green,
                   ),
                   title: Text(
-                    _getLocalizedText('email', currentLocale.languageCode),
+                    AppLocalizations.of(context)!.email,
+
+                    //_getLocalizedText('email', currentLocale.languageCode),
                   ),
                   value: const Text('user@example.com'),
                   trailing: Icon(
                     isRTL ? Icons.chevron_left : Icons.chevron_right,
                   ),
                   onPressed: (context) {
+
                     _showSnackBar(
-                      _getLocalizedText(
-                        'email_tapped',
-                        currentLocale.languageCode,
-                      ),
-                    );
+                    AppLocalizations.of(context)!.email_tapped
+
+                    //   _getLocalizedText(
+                    //     'email_tapped',
+                    //     currentLocale.languageCode,
+                    //   ),
+                     );
                   },
                 ),
                 SettingsTile.navigation(
@@ -115,7 +129,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: Colors.orange,
                   ),
                   title: Text(
-                    _getLocalizedText('phone', currentLocale.languageCode),
+                    AppLocalizations.of(context)!.phone
+                    //_getLocalizedText('phone', currentLocale.languageCode),
                   ),
                   value: const Text('+1 234 567 8900'),
                   trailing: Icon(
@@ -123,10 +138,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   onPressed: (context) {
                     _showSnackBar(
-                      _getLocalizedText(
-                        'phone_tapped',
-                        currentLocale.languageCode,
-                      ),
+                    AppLocalizations.of(context)!.phone_tapped
+                    
+  // _getLocalizedText(
+                      //   'phone_tapped',
+                      //   currentLocale.languageCode,
+                      // ),
                     );
                   },
                 ),
@@ -136,7 +153,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             // Preferences Section
             SettingsSection(
               title: Text(
-                _getLocalizedText('preferences', currentLocale.languageCode),
+//                 _getLocalizedText('preferences', currentLocale.languageCode
+// ),
+  AppLocalizations.of(context)!.preferences,
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -150,23 +169,28 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: Colors.red,
                   ),
                   title: Text(
-                    _getLocalizedText(
-                      'notifications',
-                      currentLocale.languageCode,
-                    ),
+                    // _getLocalizedText(
+                    //   'notifications',
+                    //   currentLocale.languageCode,
+                    // ),
+                    AppLocalizations.of(context)!.notifications,
+
                   ),
                   description: Text(
-                    _getLocalizedText(
-                      'receive_notifications',
-                      currentLocale.languageCode,
-                    ),
+                    // _getLocalizedText(
+                    //   'receive_notifications',
+                    //   currentLocale.languageCode,
+                    // ),
+                    AppLocalizations.of(context)!.receive_notifications,
+
                   ),
                   onToggle: (value) {
                     setState(() {
                       _notificationsEnabled = value;
                     });
                     _showSnackBar(
-                      '${_getLocalizedText('notifications', currentLocale.languageCode)} ${value ? _getLocalizedText('enabled', currentLocale.languageCode) : _getLocalizedText('disabled', currentLocale.languageCode)}',
+                 
+                      '${   AppLocalizations.of(context)!.notifications } ${value ?   AppLocalizations.of(context)!.enabled :   AppLocalizations.of(context)!.disabled}',
                     );
                   },
                 ),
@@ -177,24 +201,24 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: Colors.teal,
                   ),
                   title: Text(
-                    _getLocalizedText(
-                      'autoplay_videos',
-                      currentLocale.languageCode,
-                    ),
+                    // _getLocalizedText(
+                    //   'autoplay_videos',
+                    //   currentLocale.languageCode,
+                    // ),
+AppLocalizations.of(context)!.autoplay_videos
                   ),
                   description: Text(
-                    _getLocalizedText(
-                      'videos_play_auto',
-                      currentLocale.languageCode,
-                    ),
+           AppLocalizations.of(context)!.videos_play_auto
                   ),
                   onToggle: (value) {
                     setState(() {
                       _autoPlayVideos = value;
                     });
                     _showSnackBar(
-                      '${_getLocalizedText('autoplay', currentLocale.languageCode)} ${value ? _getLocalizedText('enabled', currentLocale.languageCode) : _getLocalizedText('disabled', currentLocale.languageCode)}',
+                                            '${AppLocalizations.of(context)!.autoplay} ${value ? AppLocalizations.of(context)!.enabled : AppLocalizations.of(context)!.disabled}',
+
                     );
+
                   },
                 ),
                 SettingsTile.navigation(
@@ -203,7 +227,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: Colors.indigo,
                   ),
                   title: Text(
-                    _getLocalizedText('language', currentLocale.languageCode),
+AppLocalizations.of(context)!.language
+
+                  //  _getLocalizedText('language', currentLocale.languageCode),
                   ),
                   value: Text(languageName),
                   trailing: Icon(
@@ -219,7 +245,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             // Theme Section
             SettingsSection(
               title: Text(
-                _getLocalizedText('theme', currentLocale.languageCode),
+AppLocalizations.of(context)!.theme,
+
+            //    _getLocalizedText('theme', currentLocale.languageCode),
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -235,30 +263,38 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: Colors.deepPurple,
                   ),
                   title: Text(
-                    _getLocalizedText('dark_mode', currentLocale.languageCode),
+AppLocalizations.of(context)!.dark_mode,
+
+                  //  _getLocalizedText('dark_mode', currentLocale.languageCode),
                   ),
                   description: Text(
-                    _getLocalizedText(
-                      'dark_mode_description',
-                      currentLocale.languageCode,
-                    ),
+AppLocalizations.of(context)!.dark_mode_description,
+
+                    // _getLocalizedText(
+                    //   'dark_mode_description',
+                    //   currentLocale.languageCode,
+                    // ),
                   ),
                   onToggle: (value) async {
                     if (value) {
                       await themeModeNotifier.useDarkTheme();
                       _showSnackBar(
-                        _getLocalizedText(
-                          'dark_mode_enabled',
-                          currentLocale.languageCode,
-                        ),
+AppLocalizations.of(context)!.dark_mode_enabled,
+
+                        // _getLocalizedText(
+                        //   'dark_mode_enabled',
+                        //   currentLocale.languageCode,
+                        // ),
                       );
                     } else {
                       await themeModeNotifier.useLightTheme();
                       _showSnackBar(
-                        _getLocalizedText(
-                          'light_mode_enabled',
-                          currentLocale.languageCode,
-                        ),
+AppLocalizations.of(context)!.light_mode_enabled,
+
+                        // _getLocalizedText(
+                        //   'light_mode_enabled',
+                        //   currentLocale.languageCode,
+                        // ),
                       );
                     }
                   },
@@ -270,33 +306,37 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: Colors.orange,
                   ),
                   title: Text(
-                    _getLocalizedText(
-                      'system_theme',
-                      currentLocale.languageCode,
-                    ),
+AppLocalizations.of(context)!.system_theme,
+                    // _getLocalizedText(
+                    //   'system_theme',
+                    //   currentLocale.languageCode,
+                    // ),
                   ),
                   description: Text(
-                    _getLocalizedText(
-                      'system_theme_description',
-                      currentLocale.languageCode,
-                    ),
+AppLocalizations.of(context)!.system_theme_description,
+                    // _getLocalizedText(
+                    //   'system_theme_description',
+                    //   currentLocale.languageCode,
+                    // ),
                   ),
                   onToggle: (value) async {
                     if (value) {
                       await themeModeNotifier.useSystemTheme();
                       _showSnackBar(
-                        _getLocalizedText(
-                          'system_theme_enabled',
-                          currentLocale.languageCode,
-                        ),
+AppLocalizations.of(context)!.system_theme_enabled,
+                        // _getLocalizedText(
+                        //   'system_theme_enabled',
+                        //   currentLocale.languageCode,
+                        // ),
                       );
                     } else {
                       await themeModeNotifier.useLightTheme();
                       _showSnackBar(
-                        _getLocalizedText(
-                          'light_mode_enabled',
-                          currentLocale.languageCode,
-                        ),
+AppLocalizations.of(context)!.light_mode_enabled,
+                        // _getLocalizedText(
+                        //   'light_mode_enabled',
+                        //   currentLocale.languageCode,
+                        // ),
                       );
                     }
                   },
@@ -307,10 +347,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: Colors.pink,
                   ),
                   title: Text(
-                    _getLocalizedText(
-                      'theme_preview',
-                      currentLocale.languageCode,
-                    ),
+AppLocalizations.of(context)!.theme_preview,
+                    // _getLocalizedText(
+                    //   'theme_preview',
+                    //   currentLocale.languageCode,
+                    // ),
                   ),
                   description: Text(
                     _getCurrentThemeText(themeMode, currentLocale.languageCode),
@@ -333,7 +374,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             // Security Section
             SettingsSection(
               title: Text(
-                _getLocalizedText('security', currentLocale.languageCode),
+                AppLocalizations.of(context)!.security,
+                //_getLocalizedText('security', currentLocale.languageCode),
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -343,20 +385,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 SettingsTile.navigation(
                   leading: const Icon(Icons.lock_outline, color: Colors.amber),
                   title: Text(
-                    _getLocalizedText(
-                      'change_password',
-                      currentLocale.languageCode,
-                    ),
+AppLocalizations.of(context)!.change_password,
+                    // _getLocalizedText(
+                    //   'change_password',
+                    //   currentLocale.languageCode,
+                    // ),
                   ),
                   trailing: Icon(
                     isRTL ? Icons.chevron_left : Icons.chevron_right,
                   ),
                   onPressed: (context) {
                     _showSnackBar(
-                      _getLocalizedText(
-                        'change_password_tapped',
-                        currentLocale.languageCode,
-                      ),
+AppLocalizations.of(context)!.change_password_tapped,
+                      // _getLocalizedText(
+                      //   'change_password_tapped',
+                      //   currentLocale.languageCode,
+                      // ),
                     );
                   },
                 ),
@@ -367,20 +411,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: Colors.deepOrange,
                   ),
                   title: Text(
-                    _getLocalizedText('biometric', currentLocale.languageCode),
+                    AppLocalizations.of(context)!.biometric,
+                  //  _getLocalizedText('biometric', currentLocale.languageCode),
                   ),
                   description: Text(
-                    _getLocalizedText(
-                      'use_fingerprint',
-                      currentLocale.languageCode,
-                    ),
+AppLocalizations.of(context)!.use_fingerprint,
+                    // _getLocalizedText(
+                    //   'use_fingerprint',
+                    //   currentLocale.languageCode,
+                    // ),
                   ),
                   onToggle: (value) {
                     setState(() {
                       _biometricEnabled = value;
                     });
                     _showSnackBar(
-                      '${_getLocalizedText('biometric', currentLocale.languageCode)} ${value ? _getLocalizedText('enabled', currentLocale.languageCode) : _getLocalizedText('disabled', currentLocale.languageCode)}',
+                      '${AppLocalizations.of(context)!.biometric} ${value ? AppLocalizations.of(context)!.enabled : AppLocalizations.of(context)!.disabled}',
                     );
                   },
                 ),
@@ -390,20 +436,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: Colors.cyan,
                   ),
                   title: Text(
-                    _getLocalizedText(
-                      'privacy_policy',
-                      currentLocale.languageCode,
-                    ),
+AppLocalizations.of(context)!.privacy_policy,
+                    // _getLocalizedText(
+                    //   'privacy_policy',
+                    //   currentLocale.languageCode,
+                    // ),
                   ),
                   trailing: Icon(
                     isRTL ? Icons.chevron_left : Icons.chevron_right,
                   ),
                   onPressed: (context) {
                     _showSnackBar(
-                      _getLocalizedText(
-                        'privacy_tapped',
-                        currentLocale.languageCode,
-                      ),
+AppLocalizations.of(context)!.privacy_tapped
+                      // _getLocalizedText(
+                      //   'privacy_tapped',
+                      //   currentLocale.languageCode,
+                      // ),
                     );
                   },
                 ),
@@ -412,18 +460,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     Icons.shield_outlined,
                     color: Colors.pink,
                   ),
-                  title: Text(
-                    _getLocalizedText('terms', currentLocale.languageCode),
+                  title: Text(AppLocalizations.of(context)!.terms
+                    //_getLocalizedText('terms', currentLocale.languageCode),
                   ),
                   trailing: Icon(
                     isRTL ? Icons.chevron_left : Icons.chevron_right,
                   ),
                   onPressed: (context) {
                     _showSnackBar(
-                      _getLocalizedText(
-                        'terms_tapped',
-                        currentLocale.languageCode,
-                      ),
+AppLocalizations.of(context)!.terms_tapped
+                      // _getLocalizedText(
+                      //   'terms_tapped',
+                      //   currentLocale.languageCode,
+                      // ),
                     );
                   },
                 ),
@@ -432,8 +481,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
             // Communication Section
             SettingsSection(
-              title: Text(
-                _getLocalizedText('communication', currentLocale.languageCode),
+              title: Text(AppLocalizations.of(context)!.communication,
+               // _getLocalizedText('communication', currentLocale.languageCode),
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -492,8 +541,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
             // About Section
             SettingsSection(
-              title: Text(
-                _getLocalizedText('about', currentLocale.languageCode),
+              title: Text(AppLocalizations.of(context)!.about,
+               // _getLocalizedText('about', currentLocale.languageCode),
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -505,50 +554,48 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     Icons.info_outline,
                     color: Colors.blueGrey,
                   ),
-                  title: Text(
-                    _getLocalizedText(
-                      'app_version',
-                      currentLocale.languageCode,
-                    ),
+                  title: Text(AppLocalizations.of(context)!.app_version,
+                   
                   ),
                   value: const Text('1.0.0'),
                   onPressed: (context) {
                     _showSnackBar(
-                      '${_getLocalizedText('version', currentLocale.languageCode)} 1.0.0',
+                      '${AppLocalizations.of(context)!.version} 1.0.0',
                     );
                   },
                 ),
                 SettingsTile.navigation(
                   leading: const Icon(Icons.help_outline, color: Colors.brown),
-                  title: Text(
-                    _getLocalizedText('help', currentLocale.languageCode),
+                  title: Text(AppLocalizations.of(context)!.help
+                   // _getLocalizedText('help', currentLocale.languageCode),
                   ),
                   trailing: Icon(
                     isRTL ? Icons.chevron_left : Icons.chevron_right,
                   ),
                   onPressed: (context) {
                     _showSnackBar(
-                      _getLocalizedText(
-                        'help_tapped',
-                        currentLocale.languageCode,
-                      ),
+AppLocalizations.of(context)!.help_tapped
+                      // _getLocalizedText(
+                      //   'help_tapped',
+                      //   currentLocale.languageCode,
+                      // ),
                     );
                   },
                 ),
                 SettingsTile.navigation(
                   leading: const Icon(Icons.star_outline, color: Colors.yellow),
-                  title: Text(
-                    _getLocalizedText('rate_app', currentLocale.languageCode),
+                  title: Text(AppLocalizations.of(context)!.rate_app
+                 //   _getLocalizedText('rate_app', currentLocale.languageCode),
                   ),
                   trailing: Icon(
                     isRTL ? Icons.chevron_left : Icons.chevron_right,
                   ),
                   onPressed: (context) {
-                    _showSnackBar(
-                      _getLocalizedText(
-                        'rate_tapped',
-                        currentLocale.languageCode,
-                      ),
+                    _showSnackBar(AppLocalizations.of(context)!.rate_tapped
+                      // _getLocalizedText(
+                      //   'rate_tapped',
+                      //   currentLocale.languageCode,
+                      // ),
                     );
                   },
                 ),
@@ -557,8 +604,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
             // Danger Zone
             SettingsSection(
-              title: Text(
-                _getLocalizedText('danger_zone', currentLocale.languageCode),
+              title: Text(AppLocalizations.of(context)!.danger_zone,
+              //  _getLocalizedText('danger_zone', currentLocale.languageCode),
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -568,8 +615,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               tiles: [
                 SettingsTile.navigation(
                   leading: const Icon(Icons.logout, color: Colors.red),
-                  title: Text(
-                    _getLocalizedText('logout', currentLocale.languageCode),
+                  title: Text(AppLocalizations.of(context)!.log_out,
+                //    _getLocalizedText('logout', currentLocale.languageCode),
                     style: const TextStyle(color: Colors.red),
                   ),
                   onPressed: (context) {
@@ -578,11 +625,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
                 SettingsTile.navigation(
                   leading: const Icon(Icons.delete_forever, color: Colors.red),
-                  title: Text(
-                    _getLocalizedText(
-                      'delete_account',
-                      currentLocale.languageCode,
-                    ),
+                  title: Text(AppLocalizations.of(context)!.delete_account,
+                    // _getLocalizedText(
+                    //   'delete_account',
+                    //   currentLocale.languageCode,
+                    // ),
                     style: const TextStyle(color: Colors.red),
                   ),
                   onPressed: (context) {
@@ -1368,5 +1415,3 @@ class _LanguageOption extends StatelessWidget {
 // }
 
 // // Main function to run the app
-
-

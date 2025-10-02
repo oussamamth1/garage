@@ -84,6 +84,7 @@ flutter:
   assets:
     - assets/
     - assets/banner.jpg
+    - assets/ALn.png
     - assets/images.jpg
     - assets/logo.png
     - assets/logo1.png

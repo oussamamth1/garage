@@ -10,6 +10,8 @@ import 'package:garage_management/src/screen/MyActivityScreen.dart';
 import 'package:garage_management/src/screen/ProfilePage.dart';
 import 'package:garage_management/src/screen/costomer/CustomerHomeScreen.dart';
 import 'package:garage_management/src/settings/Settings.dart';
+import 'package:garage_management/l10n/app_localizations.dart';
+import 'package:garage_management/src/theme/app_theme.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -59,15 +61,17 @@ class _HomePageState extends ConsumerState<HomePage>
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      extendBodyBehindAppBar: _selectedIndex == 0,
-      appBar: _selectedIndex != 3
+     // extendBodyBehindAppBar: _selectedIndex == 0,
+      appBar: _selectedIndex != 1
           ? PreferredSize(
               preferredSize: const Size.fromHeight(70),
               child: AppBar(
                 elevation: 0,
-                backgroundColor: _selectedIndex == 0
-                    ? Colors.transparent
-                    : Theme.of(context).primaryColor,
+             backgroundColor: 
+// _selectedIndex == 0?
+//            const Color.fromARGB(71, 212, 166, 116)
+                    //? Colors.transparent
+                     Theme.of(context).primaryColor,
                 flexibleSpace: _selectedIndex != 0
                     ? Container(
                         decoration: BoxDecoration(
@@ -84,29 +88,10 @@ class _HomePageState extends ConsumerState<HomePage>
                     : null,
                 title: Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _getPageTitle(_selectedIndex),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      Text(
-                        _getPageSubtitle(_selectedIndex),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white.withOpacity(0.9),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                  child: 
+ Image.asset("assets/logo2.png", height: 40,width: 40,),  ),
                 actions: [
+            
                   // Notification icon with modern badge
                   Container(
                     margin: const EdgeInsets.only(right: 8),
@@ -176,7 +161,7 @@ class _HomePageState extends ConsumerState<HomePage>
                       data: (userData) => GestureDetector(
                         onTap: () {
                           setState(() {
-                            _selectedIndex = 3;
+                            _selectedIndex = 1;
                             _animationController.reset();
                             _animationController.forward();
                           });
@@ -230,7 +215,65 @@ class _HomePageState extends ConsumerState<HomePage>
                       ),
                     ),
                   ),
-                ],
+                       Container(
+                    margin: const EdgeInsets.only(right: 8),
+                    child: Stack(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.settings, size: 24),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SettingsScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Positioned(
+                          right: 8,
+                          top: 8,
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFFFF6B6B), Color(0xFFEE5A6F)],
+                              ),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.red.withOpacity(0.4),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 18,
+                              minHeight: 18,
+                            ),
+                            child: const Text(
+                              '3',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
               ),
             )
           : null,
@@ -254,27 +297,31 @@ class _HomePageState extends ConsumerState<HomePage>
           badgePadding: const EdgeInsets.all(4),
           badgeColor: const Color(0xFFFF6B6B),
           badgeTextColor: Colors.white,
-          style: TabStyle.custom,
-          backgroundColor: Colors.white,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor.withOpacity(0.8),
-            ],
-          ),
-          activeColor: const Color.fromARGB(255, 16, 10, 10),
-          color: const Color.fromARGB(255, 12, 7, 156),
-          height: 60,
-          curveSize: 80,
-          top: -25,
-          items: const [
-            TabItem(icon: Icons.home_rounded, title: 'Home'),
-            TabItem(icon: Icons.person_outline_rounded, title: 'Profile'),
-            TabItem(icon: Icons.build_circle_outlined, title: 'Jobs'),
-            TabItem(icon: Icons.inventory_2_outlined, title: 'Activity'),
-            TabItem(icon: Icons.two_wheeler_rounded, title: 'Vehicles'),
+        //  style: TabStyle.flip,
+          style: TabStyle.reactCircle,
+          backgroundColor: const Color.fromARGB(255, 252, 251, 249),
+        //   gradient: LinearGradient(
+        //     begin: Alignment.topLeft,
+        //     end: Alignment.bottomRight,
+        //     colors: [
+        //       Theme.of(context).primaryColor,
+        //       Theme.of(context).primaryColor.withOpacity(0.8),
+        //     ],
+        //   ),
+         activeColor: const Color.fromARGB(255, 235, 2, 2),
+         color: const Color.fromARGB(255, 58, 58, 59),
+          height: 50,
+          curveSize: 50,
+          top: -10,
+          items:  [
+            TabItem(icon: Icons.home_rounded, title: AppLocalizations.of(context)!.accueil,
+            ),
+            TabItem(icon: Icons.person_outline_rounded, title:  AppLocalizations.of(context)!.profile,
+            ),
+            TabItem(icon: Icons.build_circle_outlined, title:  AppLocalizations.of(context)!.jobs),
+            TabItem(icon: Icons.inventory_2_outlined, title: AppLocalizations.of(context)!.activity,
+            ),
+            TabItem(icon: Icons.two_wheeler_rounded, title:  AppLocalizations.of(context)!.vehicles,)
           ],
           initialActiveIndex: 0,
           onTap: (index) {
