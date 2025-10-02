@@ -9,6 +9,7 @@ import 'package:garage_management/src/screen/MotoItemsScreen.dart';
 import 'package:garage_management/src/screen/MyActivityScreen.dart';
 import 'package:garage_management/src/screen/ProfilePage.dart';
 import 'package:garage_management/src/screen/costomer/CustomerHomeScreen.dart';
+import 'package:garage_management/src/settings/Settings.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -56,6 +57,10 @@ CustomerHomeScreen()
                     IconButton(
                       icon: const Icon(Icons.notifications_outlined),
                       onPressed: () {
+ Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+      );
                         // Handle notifications
                       },
                     ),

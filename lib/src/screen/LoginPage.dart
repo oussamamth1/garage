@@ -231,7 +231,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 :    ElevatedButton(
                               onPressed: () {
                                 if (context.mounted) {
-                                  Navigator.pushReplacement(
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => const AuthGate(),

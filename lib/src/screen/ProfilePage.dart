@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:garage_management/src/provider/authProvider.dart';
+import 'package:garage_management/src/screen/AuthGate.dart';
 import 'package:garage_management/src/screen/EditProfilePage.dart';
 import 'package:garage_management/src/screen/MyBookingsScreen.dart';
 
@@ -702,12 +703,28 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               );
 
               if (confirm == true && context.mounted) {
-                await FirebaseAuth.instance.signOut();
-                if (context.mounted) {
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                }
+            //    await FirebaseAuth.instance.signOut();
+              try {
+          // Sign out from Firebase
+          await FirebaseAuth.instance.signOut();
+          
+          if (context.mounted) {
+            // Navigate to AuthGate and remove all previous routes
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const AuthGate()),
+              (route) => false,
+            );
+          }}catch (e) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Logout failed: $e'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
               }
-            },
+              }},
             gradient: LinearGradient(
               colors: [Colors.red[400]!, Colors.red[600]!],
             ),

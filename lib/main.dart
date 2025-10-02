@@ -5,7 +5,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:garage_management/l10n/l10n.dart';
 import 'package:garage_management/src/provider/locale_provider.dart';
 import 'package:garage_management/src/screen/AuthGate.dart';
+import 'package:garage_management/src/screen/HomePage.dart';
+import 'package:garage_management/src/screen/LoginPage.dart';
 import 'package:garage_management/src/screen/auth/LanguageSelectionPage.dart';
+import 'package:garage_management/src/screen/auth/PhoneAuthScreen.dart';
+import 'package:garage_management/src/settings/Settings.dart';
 import 'firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
@@ -75,6 +79,13 @@ class MyApp extends ConsumerWidget  {
           foregroundColor: Colors.white,
         ),
       ),
+      routes: {
+        '/home': (context) => HomePage(),
+        '/login': (context) => LoginPage(),
+        '/phone-auth': (context) => const PhoneAuthScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        '/auth': (context) => const AuthGate(),
+      },
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.blue,
