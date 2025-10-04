@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:garage_management/screens/service_selection_screen.dart';
 import 'package:garage_management/src/provider/authProvider.dart';
 import 'package:garage_management/src/screen/Accuile.dart';
 import 'package:garage_management/src/screen/Moto/MotoTypeScreen.dart';
@@ -61,17 +62,17 @@ class _HomePageState extends ConsumerState<HomePage>
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-     // extendBodyBehindAppBar: _selectedIndex == 0,
+      // extendBodyBehindAppBar: _selectedIndex == 0,
       appBar: _selectedIndex != 1
           ? PreferredSize(
               preferredSize: const Size.fromHeight(70),
               child: AppBar(
                 elevation: 0,
-             backgroundColor: 
-// _selectedIndex == 0?
-//            const Color.fromARGB(71, 212, 166, 116)
+                backgroundColor:
+                    // _selectedIndex == 0?
+                    //            const Color.fromARGB(71, 212, 166, 116)
                     //? Colors.transparent
-                     Theme.of(context).primaryColor,
+                    Theme.of(context).primaryColor,
                 flexibleSpace: _selectedIndex != 0
                     ? Container(
                         decoration: BoxDecoration(
@@ -88,10 +89,9 @@ class _HomePageState extends ConsumerState<HomePage>
                     : null,
                 title: Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: 
- Image.asset("assets/logo2.png", height: 40,width: 40,),  ),
+                  child: Image.asset("assets/logo2.png", height: 40, width: 40),
+                ),
                 actions: [
-            
                   // Notification icon with modern badge
                   Container(
                     margin: const EdgeInsets.only(right: 8),
@@ -104,15 +104,14 @@ class _HomePageState extends ConsumerState<HomePage>
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: IconButton(
-                            icon: const Icon(
-                              Icons.notifications_outlined,
-                              size: 24,
-                            ),
+                            icon: const Icon(Icons.percent, size: 24),
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const SettingsScreen(),
+                                  builder: (context) => ServiceSelectionScreen(
+                                    customerId: "5IoyXkEiKrVFgOlq5pqN5HDJgFn1",
+                                  ),
                                 ),
                               );
                             },
@@ -215,7 +214,7 @@ class _HomePageState extends ConsumerState<HomePage>
                       ),
                     ),
                   ),
-                       Container(
+                  Container(
                     margin: const EdgeInsets.only(right: 8),
                     child: Stack(
                       children: [
@@ -273,7 +272,7 @@ class _HomePageState extends ConsumerState<HomePage>
                       ],
                     ),
                   ),
-              ],
+                ],
               ),
             )
           : null,
@@ -297,31 +296,43 @@ class _HomePageState extends ConsumerState<HomePage>
           badgePadding: const EdgeInsets.all(4),
           badgeColor: const Color(0xFFFF6B6B),
           badgeTextColor: Colors.white,
-        //  style: TabStyle.flip,
+          //  style: TabStyle.flip,
           style: TabStyle.reactCircle,
           backgroundColor: const Color.fromARGB(255, 252, 251, 249),
-        //   gradient: LinearGradient(
-        //     begin: Alignment.topLeft,
-        //     end: Alignment.bottomRight,
-        //     colors: [
-        //       Theme.of(context).primaryColor,
-        //       Theme.of(context).primaryColor.withOpacity(0.8),
-        //     ],
-        //   ),
-         activeColor: const Color.fromARGB(255, 235, 2, 2),
-         color: const Color.fromARGB(255, 58, 58, 59),
+          //   gradient: LinearGradient(
+          //     begin: Alignment.topLeft,
+          //     end: Alignment.bottomRight,
+          //     colors: [
+          //       Theme.of(context).primaryColor,
+          //       Theme.of(context).primaryColor.withOpacity(0.8),
+          //     ],
+          //   ),
+          activeColor: const Color.fromARGB(255, 235, 2, 2),
+          color: const Color.fromARGB(255, 58, 58, 59),
           height: 50,
           curveSize: 50,
           top: -10,
-          items:  [
-            TabItem(icon: Icons.home_rounded, title: AppLocalizations.of(context)!.accueil,
+          items: [
+            TabItem(
+              icon: Icons.home_rounded,
+              title: AppLocalizations.of(context)!.accueil,
             ),
-            TabItem(icon: Icons.person_outline_rounded, title:  AppLocalizations.of(context)!.profile,
+            TabItem(
+              icon: Icons.person_outline_rounded,
+              title: AppLocalizations.of(context)!.profile,
             ),
-            TabItem(icon: Icons.build_circle_outlined, title:  AppLocalizations.of(context)!.jobs),
-            TabItem(icon: Icons.inventory_2_outlined, title: AppLocalizations.of(context)!.activity,
+            TabItem(
+              icon: Icons.build_circle_outlined,
+              title: AppLocalizations.of(context)!.jobs,
             ),
-            TabItem(icon: Icons.two_wheeler_rounded, title:  AppLocalizations.of(context)!.vehicles,)
+            TabItem(
+              icon: Icons.inventory_2_outlined,
+              title: AppLocalizations.of(context)!.activity,
+            ),
+            TabItem(
+              icon: Icons.two_wheeler_rounded,
+              title: AppLocalizations.of(context)!.vehicles,
+            ),
           ],
           initialActiveIndex: 0,
           onTap: (index) {

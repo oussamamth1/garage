@@ -17,3 +17,15 @@ final userProfileProvider = StreamProvider.family<AppUser?, String>((ref, uid) {
       .snapshots()
       .map((doc) => doc.exists ? AppUser.fromMap(doc.data()!) : null);
 });
+
+
+final currentUserProvider = StreamProvider<AppUser?>((ref) {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return Stream.value(null);
+
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .snapshots()
+      .map((doc) => doc.exists ? AppUser.fromMap(doc.data()!) : null);
+});

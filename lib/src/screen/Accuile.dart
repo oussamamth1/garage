@@ -298,7 +298,7 @@ class _AccuileState extends ConsumerState<Accuile> {
                               ),
                             ),
                           ),
-                         // const SizedBox(height: 24),
+                          // const SizedBox(height: 24),
                         ],
                       );
                     },
@@ -357,7 +357,8 @@ class _AccuileState extends ConsumerState<Accuile> {
 
                       return Column(
                         children: [
-                          Expanded(flex: 1,
+                          Expanded(
+                            flex: 1,
                             child: _buildSectionHeader(
                               "Popular categorys",
                               Icons.settings,
@@ -365,9 +366,10 @@ class _AccuileState extends ConsumerState<Accuile> {
                           ),
 
                           // Enhanced horizontal scrolling category list
-                          Expanded(flex: 3,
+                          Expanded(
+                            flex: 3,
                             child: SizedBox(
-                            //  height: 300,
+                              //  height: 300,
                               child: ListView.builder(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 12,
@@ -827,7 +829,8 @@ class _AccuileState extends ConsumerState<Accuile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(flex: 2,
+            Expanded(
+              flex: 2,
               child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(16),
@@ -848,9 +851,10 @@ class _AccuileState extends ConsumerState<Accuile> {
                 ),
               ),
             ),
-            Expanded(flex: 1,
+            Expanded(
+              flex: 1,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 3,left: 8),
+                padding: const EdgeInsets.only(bottom: 3, left: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -866,7 +870,10 @@ class _AccuileState extends ConsumerState<Accuile> {
                     const SizedBox(height: 4),
                     Text(
                       service.description,
-                      style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 12,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -1210,7 +1217,7 @@ class _AccuileState extends ConsumerState<Accuile> {
               Expanded(
                 flex: 1,
                 child: Container(
-                  padding: const EdgeInsets.only(left:3,right: 3),
+                  padding: const EdgeInsets.only(left: 3, right: 3),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border(
@@ -1221,9 +1228,7 @@ class _AccuileState extends ConsumerState<Accuile> {
                     ),
                   ),
                   child: Column(
-                   // crossAxisAlignment: CrossAxisAlignment.start,
-
-                    
+                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Category name
                       Text(
@@ -1251,7 +1256,7 @@ class _AccuileState extends ConsumerState<Accuile> {
                             ),
                           ),
                           Container(
-                          //  padding: const EdgeInsets.all(4),
+                            //  padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(colors: gradientColors),
                               borderRadius: BorderRadius.circular(8),
