@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:garage_management/src/widget/MotoTypeSelector.dart';
 
-class AddMotoScreen extends StatefulWidget {
+class AddMotoScreen extends ConsumerStatefulWidget {
   const AddMotoScreen({super.key});
 
   @override
-  State<AddMotoScreen> createState() => _AddMotoScreenState();
+  ConsumerState<AddMotoScreen> createState() => _AddMotoScreenState();
 }
 
-class _AddMotoScreenState extends State<AddMotoScreen> {
+class _AddMotoScreenState extends ConsumerState<AddMotoScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController motoTypeController = TextEditingController();
+  String? selectedMotoType;
   final TextEditingController modelController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   File? imageFile;
@@ -39,17 +41,14 @@ class _AddMotoScreenState extends State<AddMotoScreen> {
 
   Future<void> addMoto() async {
     if (_formKey.currentState!.validate()) {
-      // String? imageUrl;
-      // if (imageFile != null) {
-      //   imageUrl = await uploadImage(imageFile!);
-      // }
-
+      final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
       await FirebaseFirestore.instance.collection('suppliers').add({
         'name': nameController.text,
-        'motoType': motoTypeController.text,
+        'motoType': selectedMotoType ?? '',
         'model': modelController.text,
         'price': double.tryParse(priceController.text) ?? 0.0,
-        'imageUrl':  '',
+        'imageUrl': '',
+        'sellerId': uid,
         'createdAt': FieldValue.serverTimestamp(),
       });
 
@@ -75,11 +74,14 @@ class _AddMotoScreenState extends State<AddMotoScreen> {
                 decoration: const InputDecoration(labelText: "Item Name"),
                 validator: (value) => value!.isEmpty ? "Required" : null,
               ),
-              TextFormField(
-                controller: motoTypeController,
-                decoration: const InputDecoration(labelText: "Moto Type"),
-                validator: (value) => value!.isEmpty ? "Required" : null,
+              const SizedBox(height: 16),
+              MotoTypeSelector(
+                value: selectedMotoType,
+                onChanged: (v) => setState(() => selectedMotoType = v),
+                labelText: "Moto Type",
+                required: true,
               ),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: modelController,
                 decoration: const InputDecoration(labelText: "Model"),

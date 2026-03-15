@@ -27,20 +27,17 @@ class _BuyItemScreenState extends State<BuyItemScreen> {
 
     setState(() => isLoading = true);
 
-    final orderRef = FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.uid)
-        .collection("orders")
-        .doc();
-
+    final orderRef = FirebaseFirestore.instance.collection('orders').doc();
     await orderRef.set({
-      "itemId": widget.item.id,
-      "itemName": widget.item.name,
-      "quantity": quantity,
-      "price": widget.item.price,
-      "totalPrice": widget.item.price * quantity,
-      "status": "pending",
-      "createdAt": FieldValue.serverTimestamp(),
+      'clientId': user.uid,
+      'sellerId': widget.item.sellerId,
+      'itemId': widget.item.id,
+      'itemName': widget.item.name,
+      'quantity': quantity,
+      'price': widget.item.price,
+      'totalPrice': widget.item.price * quantity,
+      'status': 'pending',
+      'createdAt': FieldValue.serverTimestamp(),
     });
 
     setState(() => isLoading = false);

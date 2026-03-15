@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_animate/flutter_animate.dart'; // For animations
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:garage_management/src/widget/MotoTypeSelector.dart';
 
-class BookingScreen extends StatefulWidget {
+class BookingScreen extends ConsumerStatefulWidget {
   final String serviceId;
   final String serviceName;
   final String serviceDescription;
   final double servicePrice;
   final String serviceImage;
+  final String technicianId;
+  final String serviceType; // 'repair' | 'sale'
 
   const BookingScreen({
     super.key,
@@ -17,20 +21,20 @@ class BookingScreen extends StatefulWidget {
     required this.serviceDescription,
     required this.servicePrice,
     required this.serviceImage,
+    this.technicianId = '',
+    this.serviceType = 'repair',
   });
 
   @override
-  State<BookingScreen> createState() => _BookingScreenState();
+  ConsumerState<BookingScreen> createState() => _BookingScreenState();
 }
 
-class _BookingScreenState extends State<BookingScreen> {
+class _BookingScreenState extends ConsumerState<BookingScreen> {
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
   String? selectedMotoType;
   final TextEditingController descriptionController = TextEditingController();
   bool isLoading = false;
-
-  final List<String> motoTypes = ["Yamaha", "Honda", "Suzuki", "KTM", "Ducati"];
 
   // Date picker
   Future<void> _pickDate() async {
@@ -132,21 +136,23 @@ class _BookingScreenState extends State<BookingScreen> {
       selectedTime!.minute,
     );
 
-    final bookingRef = FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.uid)
-        .collection("bookings")
-        .doc();
+    final now = DateTime.now();
+    final bookingRef = FirebaseFirestore.instance.collection('bookings').doc();
 
     await bookingRef.set({
-      "serviceId": widget.serviceId,
-      "serviceName": widget.serviceName,
-      "dateTime": bookingDateTime,
-      "motoType": selectedMotoType,
-      "description": descriptionController.text,
-      "status": "pending",
-      "price": widget.servicePrice,
-      "createdAt": FieldValue.serverTimestamp(),
+      'clientId': user.uid,
+      'technicianId': widget.technicianId,
+      'serviceId': widget.serviceId,
+      'serviceName': widget.serviceName,
+      'serviceType': widget.serviceType,
+      'price': widget.servicePrice,
+      'status': 'pending',
+      'description': descriptionController.text,
+      'motoType': selectedMotoType,
+      'clientRequestedAt': Timestamp.fromDate(now),
+      'clientPreferredDateTime': Timestamp.fromDate(bookingDateTime),
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
     });
 
     setState(() => isLoading = false);
@@ -233,34 +239,20 @@ class _BookingScreenState extends State<BookingScreen> {
             ).animate().fadeIn(duration: 800.ms),
             const SizedBox(height: 24),
 
-            // Moto type dropdown
+            // Moto type: select existing or create new
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: MotoTypeSelector(
+                  value: selectedMotoType,
+                  onChanged: (val) => setState(() => selectedMotoType = val),
                   labelText: "Select Moto Type",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[50],
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
+                  required: true,
                 ),
-                value: selectedMotoType,
-                items: motoTypes
-                    .map(
-                      (type) =>
-                          DropdownMenuItem(value: type, child: Text(type)),
-                    )
-                    .toList(),
-                onChanged: (val) => setState(() => selectedMotoType = val),
               ),
             ).animate().fadeIn(duration: 900.ms),
             const SizedBox(height: 16),

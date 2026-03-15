@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:garage_management/src/model/booking.dart';
+import 'package:garage_management/src/provider/bookingProvider.dart';
+import 'package:garage_management/src/screen/ChatScreen.dart';
 
-class MyBookingsScreen extends StatelessWidget {
+class MyBookingsScreen extends ConsumerWidget {
   const MyBookingsScreen({super.key});
 
   Future<void> _updateBooking(
     BuildContext context,
-    String userId,
     String bookingId,
-    DateTime currentDateTime,
+    DateTime? currentPreferred,
   ) async {
-    // Pick new date
     final newDate = await showDatePicker(
       context: context,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 60)),
-      initialDate: currentDateTime,
+      initialDate: currentPreferred ?? DateTime.now(),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -34,13 +36,11 @@ class MyBookingsScreen extends StatelessWidget {
         );
       },
     );
+    if (newDate == null || !context.mounted) return;
 
-    if (newDate == null) return;
-
-    // Pick new time
     final newTime = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.fromDateTime(currentDateTime),
+      initialTime: TimeOfDay.fromDateTime(currentPreferred ?? DateTime.now()),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -57,8 +57,7 @@ class MyBookingsScreen extends StatelessWidget {
         );
       },
     );
-
-    if (newTime == null) return;
+    if (newTime == null || !context.mounted) return;
 
     final newDateTime = DateTime(
       newDate.year,
@@ -68,39 +67,29 @@ class MyBookingsScreen extends StatelessWidget {
       newTime.minute,
     );
 
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(userId)
-        .collection("bookings")
-        .doc(bookingId)
-        .update({
-          "dateTime": newDateTime,
-          "status": "pending",
-          "updatedAt": FieldValue.serverTimestamp(),
-        });
+    await FirebaseFirestore.instance.collection('bookings').doc(bookingId).update({
+      'clientPreferredDateTime': Timestamp.fromDate(newDateTime),
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
 
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text("Booking updated successfully"),
+        const SnackBar(
+          content: Text("Booking updated successfully"),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
+          margin: EdgeInsets.all(16),
         ),
       );
     }
   }
 
-  Future<void> _deleteBooking(
-    BuildContext context,
-    String userId,
-    String bookingId,
-  ) async {
+  Future<void> _cancelBooking(BuildContext context, String bookingId) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("Cancel Booking"),
-        content: const Text("Are you sure you want to delete this booking?"),
+        content: const Text("Are you sure you want to cancel this booking?"),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         actions: [
           TextButton(
@@ -113,59 +102,66 @@ class MyBookingsScreen extends StatelessWidget {
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: const Text("Yes, Delete"),
+            child: const Text("Yes, Cancel"),
           ),
         ],
       ),
     );
-
     if (confirm != true) return;
 
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(userId)
-        .collection("bookings")
-        .doc(bookingId)
-        .delete();
+    await FirebaseFirestore.instance.collection('bookings').doc(bookingId).update({
+      'status': 'cancelled',
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
 
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text("Booking deleted"),
+        const SnackBar(
+          content: Text("Booking cancelled"),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
+          margin: EdgeInsets.all(16),
         ),
       );
     }
   }
 
-  void _showBookingDetails(
-    BuildContext context,
-    Map<String, dynamic> booking,
-    DateTime dateTime,
-    String status,
-  ) {
+  void _showBookingDetails(BuildContext context, Booking booking) {
+    final preferred = booking.clientPreferredDateTime ?? booking.clientRequestedAt;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(booking["serviceName"] ?? "Unknown Service"),
+        title: Text(booking.serviceName),
         content: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                "Date: ${DateFormat('dd/MM/yyyy HH:mm').format(dateTime)}",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
+              if (preferred != null)
+                Text(
+                  "Requested: ${DateFormat('dd/MM/yyyy HH:mm').format(preferred)}",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
               const SizedBox(height: 8),
               Text(
-                "Status: $status",
+                "Status: ${booking.status}",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: status == "pending" ? Colors.orange : Colors.green,
-                ),
+                      color: booking.status == "pending"
+                          ? Colors.orange
+                          : booking.status == "rejected" || booking.status == "cancelled"
+                              ? Colors.red
+                              : Colors.green,
+                    ),
               ),
+              if (booking.estimatedReadyAt != null) ...[
+                const SizedBox(height: 8),
+                Text(
+                  "Ready by: ${DateFormat('dd/MM/yyyy HH:mm').format(booking.estimatedReadyAt!)}",
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              ],
               const SizedBox(height: 16),
               Text(
                 "Description:",
@@ -173,7 +169,7 @@ class MyBookingsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                booking["description"] ?? "No description available",
+                booking.description ?? "No description",
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
@@ -191,9 +187,8 @@ class MyBookingsScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final user = FirebaseAuth.instance.currentUser;
-
     if (user == null) {
       return Scaffold(
         body: Center(
@@ -205,11 +200,7 @@ class MyBookingsScreen extends StatelessWidget {
       );
     }
 
-    final bookingsRef = FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.uid)
-        .collection("bookings")
-        .orderBy("createdAt", descending: true);
+    final bookingsAsync = ref.watch(clientBookingsProvider(user.uid));
 
     return Scaffold(
       appBar: AppBar(
@@ -217,13 +208,10 @@ class MyBookingsScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: bookingsRef.snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+      body: bookingsAsync.when(
+        data: (bookings) {
+          final active = bookings.where((b) => b.status != 'cancelled' && b.status != 'rejected').toList();
+          if (active.isEmpty) {
             return Center(
               child: Text(
                 "No bookings found",
@@ -231,18 +219,13 @@ class MyBookingsScreen extends StatelessWidget {
               ),
             );
           }
-
-          final bookings = snapshot.data!.docs;
-
           return ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: bookings.length,
+            itemCount: active.length,
             itemBuilder: (context, index) {
-              final bookingDoc = bookings[index];
-              final booking = bookingDoc.data() as Map<String, dynamic>;
-
-              final dateTime = (booking["dateTime"] as Timestamp).toDate();
-              final status = booking["status"] ?? "pending";
+              final booking = active[index];
+              final preferred = booking.clientPreferredDateTime ?? booking.clientRequestedAt;
+              final status = booking.status;
 
               return Card(
                 elevation: 2,
@@ -251,84 +234,100 @@ class MyBookingsScreen extends StatelessWidget {
                 ),
                 margin: const EdgeInsets.only(bottom: 12),
                 child: InkWell(
-                  onTap: () =>
-                      _showBookingDetails(context, booking, dateTime, status),
+                  onTap: () => _showBookingDetails(context, booking),
                   borderRadius: BorderRadius.circular(12),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.build_circle,
-                          color: Theme.of(context).colorScheme.primary,
-                          size: 40,
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                booking["serviceName"] ?? "Unknown Service",
-                                style: Theme.of(context).textTheme.titleMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                DateFormat('dd/MM/yyyy HH:mm').format(dateTime),
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                              const SizedBox(height: 4),
-                              Row(
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.build_circle,
+                              color: Theme.of(context).colorScheme.primary,
+                              size: 40,
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Status: ",
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium,
-                                  ),
-                                  Text(
-                                    status,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                          color: status == "pending"
-                                              ? Colors.orange
-                                              : Colors.green,
+                                    booking.serviceName,
+                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.bold,
                                         ),
+                                  ),
+                                  if (preferred != null)
+                                    Text(
+                                      "Requested: ${DateFormat('dd/MM/yyyy HH:mm').format(preferred)}",
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                  if (booking.estimatedReadyAt != null)
+                                    Text(
+                                      "Ready by: ${DateFormat('dd/MM/yyyy HH:mm').format(booking.estimatedReadyAt!)}",
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.green.shade700,
+                                          ),
+                                    ),
+                                  const SizedBox(height: 4),
+                                  Chip(
+                                    label: Text(
+                                      status,
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    backgroundColor: status == "pending"
+                                        ? Colors.orange.withOpacity(0.2)
+                                        : status == "accepted" || status == "in_progress"
+                                            ? Colors.blue.withOpacity(0.2)
+                                            : status == "completed"
+                                                ? Colors.green.withOpacity(0.2)
+                                                : Colors.grey.withOpacity(0.2),
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                        ),
-                        PopupMenuButton<String>(
-                          onSelected: (value) async {
-                            final bookingId = bookingDoc.id;
-                            if (value == "edit") {
-                              await _updateBooking(
-                                context,
-                                user.uid,
-                                bookingId,
-                                dateTime,
-                              );
-                            } else if (value == "delete") {
-                              await _deleteBooking(
-                                context,
-                                user.uid,
-                                bookingId,
-                              );
-                            }
-                          },
-                          itemBuilder: (context) => const [
-                            PopupMenuItem(value: "edit", child: Text("Edit")),
-                            PopupMenuItem(
-                              value: "delete",
-                              child: Text("Delete"),
+                            ),
+                            if (status != 'rejected' && status != 'cancelled')
+                              IconButton(
+                                icon: const Icon(Icons.chat),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatScreen(
+                                        bookingId: booking.id,
+                                        otherPartyName: 'Technician',
+                                        currentUserId: user.uid,
+                                        clientId: booking.clientId,
+                                        technicianId: booking.technicianId,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            PopupMenuButton<String>(
+                              onSelected: (value) async {
+                                if (value == "edit" && status == "pending") {
+                                  await _updateBooking(
+                                    context,
+                                    booking.id,
+                                    booking.clientPreferredDateTime ?? booking.clientRequestedAt,
+                                  );
+                                } else if (value == "cancel" && status != "completed") {
+                                  await _cancelBooking(context, booking.id);
+                                }
+                              },
+                              itemBuilder: (context) => [
+                                if (booking.status == "pending")
+                                  const PopupMenuItem(value: "edit", child: Text("Edit preferred time")),
+                                if (booking.status != "completed")
+                                  const PopupMenuItem(value: "cancel", child: Text("Cancel")),
+                              ],
+                              icon: const Icon(Icons.more_vert),
                             ),
                           ],
-                          icon: const Icon(Icons.more_vert),
                         ),
                       ],
                     ),
@@ -338,6 +337,8 @@ class MyBookingsScreen extends StatelessWidget {
             },
           );
         },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text("Error: $e")),
       ),
     );
   }

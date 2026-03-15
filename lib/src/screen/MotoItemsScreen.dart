@@ -5,6 +5,9 @@ import 'package:garage_management/src/provider/filtres.dart';
 import 'package:garage_management/src/screen/AddMotoScreen.dart';
 import 'package:garage_management/src/screen/BuyItemScreen.dart';
 import 'package:garage_management/src/screen/MotoItemCard.dart';
+import 'package:garage_management/src/screen/MyOrdersScreen.dart';
+import 'package:garage_management/src/screen/SellerOrdersScreen.dart';
+import 'package:garage_management/src/screen/CreateChoiceScreen.dart';
 
 class MotoItemsScreen extends ConsumerWidget {
   const MotoItemsScreen({super.key});
@@ -12,7 +15,31 @@ Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(filteredSuppliersProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Moto Items")),
+      appBar: AppBar(
+        title: const Text("Moto Items"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_bag_outlined),
+            tooltip: "My orders",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const MyOrdersScreen()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.storefront_outlined),
+            tooltip: "My sales",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SellerOrdersScreen()),
+              );
+            },
+          ),
+        ],
+      ),
       body: items.isEmpty
           ? const Center(child: Text("No items found"))
           :ListView.builder(
@@ -37,15 +64,9 @@ Widget build(BuildContext context, WidgetRef ref) {
  },
 )
 ,floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigate to AddMotoScreen
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const AddMotoScreen()),
-          );
-        },
+        onPressed: () => CreateChoiceScreen.open(context),
         child: const Icon(Icons.add),
-        tooltip: "Add Moto",
+        tooltip: "Create (service or item)",
       ),
     );
   }

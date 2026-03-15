@@ -25,6 +25,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   final _passwordController = TextEditingController();
   File? _pickedImage;
   bool _isLoading = false;
+  String _selectedRole = 'client'; // 'client' | 'technician'
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
@@ -85,7 +86,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         'firstName': _firstNameController.text.trim(),
         'lastName': _lastNameController.text.trim(),
         'phone': _phoneController.text.trim(),
-        'role': 'customer',
+        'role': _selectedRole,
         'photoBase64': photoBase64,
         'photoUrl': '',
         'createdAt': DateTime.now().toIso8601String(),
@@ -408,6 +409,39 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                                 return null;
                               },
                               autofillHints: const [AutofillHints.password],
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'I am a',
+                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: RadioListTile<String>(
+                                    title: const Text('Client'),
+                                    subtitle: const Text('Book services'),
+                                    value: 'client',
+                                    groupValue: _selectedRole,
+                                    onChanged: (v) => setState(() => _selectedRole = v ?? 'client'),
+                                    dense: true,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: RadioListTile<String>(
+                                    title: const Text('Technician'),
+                                    subtitle: const Text('Offer repair/sale services'),
+                                    value: 'technician',
+                                    groupValue: _selectedRole,
+                                    onChanged: (v) => setState(() => _selectedRole = v ?? 'client'),
+                                    dense: true,
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 24),
                             _isLoading

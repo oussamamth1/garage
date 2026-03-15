@@ -19,6 +19,18 @@ class AppUser {
     required this.photoBase64,
   });
 
+  /// Supported roles: admin, technician, client. Legacy 'customer' maps to client.
+  static String _normalizeRole(dynamic role) {
+    final r = role?.toString() ?? 'client';
+    if (r == 'customer') return 'client';
+    if (r == 'admin' || r == 'technician' || r == 'client') return r;
+    return 'client';
+  }
+
+  bool get isAdmin => role == 'admin';
+  bool get isTechnician => role == 'technician';
+  bool get isClient => role == 'client';
+
   factory AppUser.fromMap(Map<String, dynamic> data) {
     return AppUser(
       uid: data['uid'] ?? '',
@@ -26,7 +38,7 @@ class AppUser {
       firstName: data['firstName'] ?? '',
       lastName: data['lastName'] ?? '',
       phone: data['phone'] ?? '',
-      role: data['role'] ?? 'customer',
+      role: _normalizeRole(data['role']),
       photoUrl: data['photoUrl'] ?? '',
       photoBase64: data['photoBase64'] ?? '',
     );

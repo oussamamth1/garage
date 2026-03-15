@@ -39,6 +39,9 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const AuthGate(),
+      routes: {
+        '/home': (context) => const AuthGate(),
+      },
     );
   }
 }

@@ -3,24 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:garage_management/src/model/service.dart';
 import 'package:garage_management/src/model/supplierItem.dart';
+import 'package:garage_management/src/provider/servicesProvider.dart';
 import 'package:garage_management/src/screen/BookingScreen.dart';
 
-// final servicesProvider = StreamProvider((ref) {
-//   return FirebaseFirestore.instance.collection('services').snapshots();
-// });
-final servicesProvider = StreamProvider<List<Service>>((ref) {
-  return FirebaseFirestore.instance
-      .collection('services')
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs
-            .map((doc) => Service.fromFirestore(doc.data(), doc.id))
-            .toList(),
-      );
-});
-// final suppliersProvider = StreamProvider((ref) {
-//   return FirebaseFirestore.instance.collection('suppliers').snapshots();
-// });
 final suppliersProvider = StreamProvider<List<SupplierItem>>((ref) {
   return FirebaseFirestore.instance
       .collection('suppliers')
@@ -80,13 +65,14 @@ class Accuile extends ConsumerWidget {
             ),
             servicesAsync.when(
               data: (services) {
+                final withTechnician = services.where((s) => s.technicianId.isNotEmpty).toList();
                 return SizedBox(
                   height: 160,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: services.length,
+                    itemCount: withTechnician.length,
                     itemBuilder: (context, index) {
-                      final service = services[index];
+                      final service = withTechnician[index];
                       return Card(
                         margin: EdgeInsets.all(8),
                         child: InkWell(onTap: () {
@@ -99,6 +85,8 @@ class Accuile extends ConsumerWidget {
                                   serviceDescription: service.description,
                                   servicePrice: service.price.toDouble(),
                                   serviceImage: service.imageUrl,
+                                  technicianId: service.technicianId,
+                                  serviceType: service.type,
                                 ),
                               ),
                             );
@@ -144,6 +132,17 @@ class Accuile extends ConsumerWidget {
             ),
             suppliersAsync.when(
               data: (suppliers) {
+                if (suppliers.isEmpty) {
+                  return SizedBox(
+                    height: 80,
+                    child: Center(
+                      child: Text(
+                        "No suppliers yet",
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                      ),
+                    ),
+                  );
+                }
                 return SizedBox(
                   height: 100,
                   child: ListView.builder(
@@ -153,14 +152,43 @@ class Accuile extends ConsumerWidget {
                       final supplier = suppliers[index];
                       return Padding(
                         padding: const EdgeInsets.all(8),
-                        child: Image.network(supplier.logoUrl, height: 60),
+                        child: supplier.logoUrl.isNotEmpty
+                            ? Image.network(
+                                supplier.logoUrl,
+                                height: 60,
+                                width: 80,
+                                fit: BoxFit.contain,
+                                errorBuilder: (_, __, ___) => Container(
+                                  height: 60,
+                                  width: 80,
+                                  color: Colors.grey[200],
+                                  child: Icon(Icons.store, color: Colors.grey[400]),
+                                ),
+                              )
+                            : Container(
+                                height: 60,
+                                width: 80,
+                                color: Colors.grey[200],
+                                child: Icon(Icons.store, color: Colors.grey[400]),
+                              ),
                       );
                     },
                   ),
                 );
               },
-              loading: () => Center(child: CircularProgressIndicator()),
-              error: (e, _) => Text("Error: $e"),
+              loading: () => SizedBox(
+                height: 80,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              error: (e, _) => SizedBox(
+                height: 80,
+                child: Center(
+                  child: Text(
+                    "Unable to load suppliers",
+                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

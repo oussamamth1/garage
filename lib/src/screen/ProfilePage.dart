@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:garage_management/src/provider/authProvider.dart';
 import 'package:garage_management/src/screen/EditProfilePage.dart';
 import 'package:garage_management/src/screen/MyBookingsScreen.dart';
+import 'package:garage_management/src/screen/MyOrdersScreen.dart';
+import 'package:garage_management/src/screen/SellerOrdersScreen.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
@@ -661,6 +663,40 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const MyBookingsScreen(),
+                ),
+              );
+            },
+            gradient: LinearGradient(
+              colors: [Colors.orange[400]!, Colors.orange[600]!],
+            ),
+          ),
+          const SizedBox(height: 12),
+          _buildActionButton(
+            context,
+            icon: Icons.shopping_bag_outlined,
+            label: "My orders",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MyOrdersScreen(),
+                ),
+              );
+            },
+            gradient: LinearGradient(
+              colors: [Colors.orange[400]!, Colors.orange[600]!],
+            ),
+          ),
+          const SizedBox(height: 12),
+          _buildActionButton(
+            context,
+            icon: Icons.storefront_outlined,
+            label: "My sales",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SellerOrdersScreen(),
                 ),
               );
             },
